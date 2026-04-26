@@ -1,955 +1,1738 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UPSKILL — Formez. Remboursez. Automatiquement.</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --navy: #0D1F3C;
-    --navy-mid: #152d54;
-    --navy-light: #1e3f70;
-    --green: #00E676;
-    --green-dim: #00c863;
-    --green-pale: #e6fff4;
-    --white: #F8F7F4;
-    --slate: #64748B;
-    --slate-light: #94a3b8;
-    --border: rgba(255,255,255,0.1);
-    --border-dark: rgba(13,31,60,0.12);
-    --amber: #f59e0b;
-    --red: #ef4444;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--white);
-    color: var(--navy);
-    overflow-x: hidden;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UPSKILL — Formez. Remboursez. Automatiquement.</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0D1F3C;
+      --navy-mid: #152d54;
+      --navy-light: #1e3f70;
+      --green: #00E676;
+      --green-dim: #00c863;
+      --green-pale: #e6fff4;
+      --white: #F8F7F4;
+      --slate: #64748B;
+      --slate-light: #94a3b8;
+      --border: rgba(255, 255, 255, 0.1);
+      --border-dark: rgba(13, 31, 60, 0.12);
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 4rem;
-    background: rgba(13,31,60,0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 1.5rem;
-    color: var(--white); letter-spacing: -0.02em;
-  }
-  .logo span { color: var(--green); }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a {
-    color: rgba(248,247,244,0.7); font-size: 0.875rem;
-    text-decoration: none; font-weight: 400;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--white); }
-  .nav-cta {
-    background: var(--green); color: var(--navy);
-    padding: 0.5rem 1.25rem; border-radius: 6px;
-    font-weight: 600; font-size: 0.875rem;
-    text-decoration: none; font-family: 'Syne', sans-serif;
-    transition: background 0.2s;
-  }
-  .nav-cta:hover { background: var(--green-dim); }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    background: var(--navy);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 8rem 4rem 6rem;
-    position: relative; overflow: hidden;
-    text-align: center;
-  }
-  .hero::before {
-    content: '';
-    position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
-    width: 900px; height: 900px; border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(0,230,118,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.25);
-    padding: 0.35rem 1rem; border-radius: 100px;
-    font-size: 0.8rem; color: var(--green); font-weight: 500;
-    margin-bottom: 2rem; letter-spacing: 0.05em; text-transform: uppercase;
-  }
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    font-weight: 800; line-height: 1.05;
-    color: var(--white); letter-spacing: -0.03em;
-    margin-bottom: 1.5rem; max-width: 900px;
-  }
-  .hero h1 em { color: var(--green); font-style: normal; }
-  .hero-sub {
-    font-size: 1.15rem; color: rgba(248,247,244,0.65);
-    max-width: 620px; line-height: 1.7; margin-bottom: 3rem;
-    font-weight: 300;
-  }
-  .hero-actions { display: flex; gap: 1rem; align-items: center; margin-bottom: 4rem; }
-  .btn-primary {
-    background: var(--green); color: var(--navy);
-    padding: 0.875rem 2rem; border-radius: 8px;
-    font-weight: 700; font-size: 1rem; font-family: 'Syne', sans-serif;
-    text-decoration: none; border: none; cursor: pointer;
-    transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-primary:hover { background: var(--green-dim); transform: translateY(-1px); }
-  .btn-secondary {
-    background: transparent; color: var(--white);
-    padding: 0.875rem 2rem; border-radius: 8px;
-    font-weight: 500; font-size: 1rem;
-    text-decoration: none; border: 1px solid rgba(255,255,255,0.25);
-    transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-secondary:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
-  .social-proof {
-    display: flex; align-items: center; gap: 2rem;
-    padding: 1.25rem 2.5rem; background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border); border-radius: 12px;
-    flex-wrap: wrap; justify-content: center;
-  }
-  .proof-item {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-size: 0.85rem; color: rgba(248,247,244,0.6);
-  }
-  .proof-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* HERO DASHBOARD MOCKUP */
-  .hero-visual {
-    width: 100%; max-width: 800px; margin: 3.5rem auto 0;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 16px; overflow: hidden;
-    font-size: 0.78rem;
-  }
-  .hv-bar {
-    background: rgba(255,255,255,0.06); padding: 0.6rem 1rem;
-    display: flex; align-items: center; gap: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .hv-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .hv-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); }
-  .hv-card {
-    background: var(--navy-mid); padding: 1.25rem 1.5rem;
-  }
-  .hv-label { color: rgba(248,247,244,0.4); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
-  .hv-value { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--white); }
-  .hv-sub { font-size: 0.72rem; color: var(--green); margin-top: 0.2rem; }
-  .hv-full { grid-column: 1 / -1; background: var(--navy-mid); padding: 1.25rem 1.5rem; }
-  .hv-progress-wrap { margin-top: 0.75rem; }
-  .hv-progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
-  .hv-pname { color: rgba(248,247,244,0.6); width: 160px; flex-shrink: 0; font-size: 0.72rem; }
-  .hv-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
-  .hv-bar-fill { height: 100%; border-radius: 3px; background: var(--green); transition: width 1.5s ease; }
-  .hv-pval { color: var(--white); font-weight: 500; font-size: 0.72rem; width: 40px; text-align: right; }
-  .hv-badge {
-    display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px;
-    font-size: 0.68rem; font-weight: 600; background: rgba(0,230,118,0.15); color: var(--green);
-    border: 1px solid rgba(0,230,118,0.3); margin-top: 0.5rem;
-  }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--navy);
+      overflow-x: hidden;
+    }
 
-  /* SECTIONS */
-  section { padding: 6rem 4rem; }
-  .section-eyebrow {
-    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em;
-    color: var(--green); font-weight: 600; margin-bottom: 1rem;
-  }
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-    font-weight: 800; line-height: 1.1;
-    letter-spacing: -0.02em; margin-bottom: 1rem;
-  }
-  .section-sub {
-    font-size: 1.05rem; color: var(--slate);
-    max-width: 560px; line-height: 1.7; font-weight: 300;
-  }
-  .centered { text-align: center; }
-  .centered .section-sub { margin: 0 auto; }
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 4rem;
+      background: rgba(13, 31, 60, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
 
-  /* PROBLEM SECTION */
-  .problem { background: #f4f3f0; }
-  .problem-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5px; margin-top: 3.5rem;
-    background: rgba(13,31,60,0.12); border-radius: 16px; overflow: hidden;
-  }
-  .prob-card { background: var(--white); padding: 2.5rem 2rem; }
-  .prob-icon {
-    width: 44px; height: 44px; border-radius: 10px;
-    background: var(--navy); display: flex; align-items: center;
-    justify-content: center; margin-bottom: 1.5rem; font-size: 1.25rem;
-  }
-  .prob-card h3 {
-    font-family: 'Syne', sans-serif; font-size: 1.1rem;
-    font-weight: 700; margin-bottom: 0.75rem;
-  }
-  .prob-card p { color: var(--slate); font-size: 0.9rem; line-height: 1.7; }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
 
-  .stats-bar {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5px; background: var(--navy);
-    border-radius: 12px; overflow: hidden; margin-top: 2rem;
-  }
-  .stat-item { background: var(--navy-mid); padding: 2rem; }
-  .stat-num {
-    font-family: 'Syne', sans-serif; font-size: 2.25rem;
-    font-weight: 800; color: var(--green); margin-bottom: 0.35rem;
-  }
-  .stat-label { color: rgba(248,247,244,0.6); font-size: 0.85rem; line-height: 1.5; }
+    .logo span {
+      color: var(--green);
+    }
 
-  /* FEATURES */
-  .features-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1.5rem; margin-top: 3.5rem;
-  }
-  .feat-card {
-    background: var(--white); border: 1px solid var(--border-dark);
-    border-radius: 16px; padding: 2.25rem;
-    transition: all 0.25s;
-  }
-  .feat-card:hover { box-shadow: 0 8px 32px rgba(13,31,60,0.1); transform: translateY(-2px); }
-  .feat-num {
-    font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
-    color: var(--green); letter-spacing: 0.12em; text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-  .feat-card h3 {
-    font-family: 'Syne', sans-serif; font-size: 1.2rem;
-    font-weight: 700; margin-bottom: 0.75rem; letter-spacing: -0.01em;
-  }
-  .feat-card blockquote {
-    font-size: 0.9rem; color: var(--slate); font-style: italic;
-    border-left: 3px solid var(--green); padding-left: 1rem;
-    margin-bottom: 1.25rem;
-  }
-  .feat-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
-  .tag {
-    padding: 0.3rem 0.75rem; border-radius: 100px;
-    background: #eef2f7; color: var(--navy);
-    font-size: 0.75rem; font-weight: 500;
-  }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
 
-  /* FLOW */
-  .flow-section { background: var(--navy); }
-  .flow-section .section-title { color: var(--white); }
-  .flow-section .section-sub { color: rgba(248,247,244,0.55); }
-  .flow-steps {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1px; margin-top: 3.5rem;
-    background: rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden;
-  }
-  .flow-step { background: var(--navy-mid); padding: 2rem 1.75rem; position: relative; }
-  .flow-step:not(:last-child)::after {
-    content: '→';
-    position: absolute; right: -12px; top: 50%;
-    transform: translateY(-50%);
-    color: var(--green); font-size: 1.25rem; z-index: 2;
-  }
-  .step-num {
-    font-family: 'Syne', sans-serif; font-size: 0.65rem;
-    color: var(--green); font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; margin-bottom: 1rem;
-  }
-  .flow-step h4 {
-    font-family: 'Syne', sans-serif; color: var(--white);
-    font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;
-  }
-  .flow-bullets { list-style: none; }
-  .flow-bullets li {
-    color: rgba(248,247,244,0.55); font-size: 0.8rem;
-    line-height: 1.6; padding: 0.2rem 0;
-    display: flex; align-items: flex-start; gap: 0.5rem;
-  }
-  .flow-bullets li::before {
-    content: ''; width: 5px; height: 5px; border-radius: 50%;
-    background: var(--green); margin-top: 0.55rem; flex-shrink: 0;
-  }
+    .nav-links a {
+      color: rgba(248, 247, 244, 0.7);
+      font-size: 0.875rem;
+      text-decoration: none;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
 
-  /* PRICING */
-  .pricing-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem; margin-top: 3.5rem; align-items: start;
-  }
-  .price-card {
-    border: 1px solid var(--border-dark);
-    border-radius: 16px; overflow: hidden;
-    background: var(--white);
-  }
-  .price-card.featured {
-    border-color: var(--navy); border-width: 2px;
-    transform: scale(1.03);
-  }
-  .price-header { padding: 1.75rem 2rem; background: #f8f7f4; border-bottom: 1px solid var(--border-dark); }
-  .price-card.featured .price-header { background: var(--navy); }
-  .price-tier {
-    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
-    font-weight: 600; color: var(--slate); margin-bottom: 0.5rem;
-  }
-  .price-card.featured .price-tier { color: rgba(248,247,244,0.5); }
-  .price-amount {
-    font-family: 'Syne', sans-serif; font-size: 2rem;
-    font-weight: 800; letter-spacing: -0.03em;
-  }
-  .price-card.featured .price-amount { color: var(--white); }
-  .price-amount span { font-size: 0.85rem; font-weight: 400; color: var(--slate); }
-  .price-card.featured .price-amount span { color: rgba(248,247,244,0.5); }
-  .price-body { padding: 1.75rem 2rem; }
-  .price-features { list-style: none; }
-  .price-features li {
-    font-size: 0.875rem; color: var(--slate);
-    padding: 0.45rem 0; display: flex; align-items: center; gap: 0.6rem;
-    border-bottom: 1px solid rgba(13,31,60,0.06);
-  }
-  .price-features li:last-child { border-bottom: none; }
-  .chk { color: var(--green); font-size: 1rem; font-weight: 700; }
-  .price-cta {
-    display: block; text-align: center;
-    padding: 0.875rem; border-radius: 8px;
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
-    text-decoration: none; margin-top: 1.5rem;
-    transition: all 0.2s;
-  }
-  .price-cta-outline {
-    border: 1.5px solid var(--navy); color: var(--navy);
-  }
-  .price-cta-outline:hover { background: var(--navy); color: var(--white); }
-  .price-cta-fill {
-    background: var(--green); color: var(--navy);
-  }
-  .price-cta-fill:hover { background: var(--green-dim); }
-  .best-badge {
-    background: var(--green); color: var(--navy);
-    font-size: 0.65rem; font-weight: 700;
-    padding: 0.2rem 0.6rem; border-radius: 100px;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    display: inline-block; margin-bottom: 0.5rem;
-  }
+    .nav-links a:hover {
+      color: var(--white);
+    }
 
-  /* READINESS SCORE */
-  .readiness-section { background: #f4f3f0; }
-  .readiness-wrap {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 4rem; margin-top: 3.5rem; align-items: center;
-  }
-  .score-widget {
-    background: var(--white); border: 1px solid var(--border-dark);
-    border-radius: 16px; padding: 2rem;
-  }
-  .score-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem; }
-  .score-header h4 {
-    font-family: 'Syne', sans-serif; font-size: 0.9rem;
-    font-weight: 700; color: var(--navy);
-  }
-  .score-ring-wrap { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.75rem; }
-  .score-ring {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: conic-gradient(#00E676 0% 72%, #e5e7eb 72% 100%);
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-  }
-  .score-ring::before {
-    content: ''; position: absolute;
-    width: 60px; height: 60px; border-radius: 50%;
-    background: var(--white);
-  }
-  .score-ring span {
-    position: relative; z-index: 1;
-    font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800;
-  }
-  .score-label { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
-  .score-sub { font-size: 0.8rem; color: var(--slate); margin-top: 0.2rem; }
-  .score-items { display: flex; flex-direction: column; gap: 0.6rem; }
-  .score-item { display: flex; align-items: center; gap: 0.75rem; }
-  .si-icon { width: 18px; font-size: 0.9rem; }
-  .si-name { flex: 1; font-size: 0.8rem; color: var(--navy); }
-  .si-bar { flex: 2; height: 5px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
-  .si-fill { height: 100%; border-radius: 3px; }
-  .si-score { font-size: 0.75rem; color: var(--slate); font-weight: 500; min-width: 40px; text-align: right; }
-  .readiness-copy { }
-  .readiness-copy p { color: var(--slate); line-height: 1.8; font-size: 0.95rem; margin-bottom: 1.25rem; }
-  .score-levels { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
-  .sl-item { display: flex; align-items: center; gap: 1rem; }
-  .sl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-  .sl-text { font-size: 0.85rem; }
-  .sl-text strong { font-weight: 600; }
+    .nav-cta {
+      background: var(--green);
+      color: var(--navy);
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      font-family: 'Syne', sans-serif;
+      transition: background 0.2s;
+    }
 
-  /* TESTIMONIALS */
-  .testimonials { background: var(--navy); }
-  .testimonials .section-title { color: var(--white); }
-  .testi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
-  .testi-card {
-    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-    border-radius: 14px; padding: 2rem;
-  }
-  .testi-quote {
-    font-size: 0.95rem; color: rgba(248,247,244,0.75);
-    line-height: 1.75; font-style: italic; margin-bottom: 1.25rem;
-  }
-  .testi-quote::before { content: '"'; color: var(--green); font-size: 1.5rem; font-style: normal; }
-  .testi-author { display: flex; align-items: center; gap: 0.75rem; }
-  .testi-avatar {
-    width: 38px; height: 38px; border-radius: 50%;
-    background: var(--navy-light); display: flex; align-items: center;
-    justify-content: center; font-family: 'Syne', sans-serif;
-    font-size: 0.75rem; font-weight: 700; color: var(--green);
-    border: 1px solid rgba(0,230,118,0.3);
-  }
-  .testi-name { font-weight: 600; color: var(--white); font-size: 0.875rem; }
-  .testi-role { color: rgba(248,247,244,0.45); font-size: 0.775rem; }
+    .nav-cta:hover {
+      background: var(--green-dim);
+    }
 
-  /* TRUST */
-  .trust-strip {
-    display: flex; align-items: center; justify-content: center;
-    gap: 2.5rem; flex-wrap: wrap; padding: 2rem 4rem;
-    background: #eef2f7; border-top: 1px solid var(--border-dark);
-    border-bottom: 1px solid var(--border-dark);
-  }
-  .trust-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--slate); }
-  .trust-chk { color: var(--green); font-size: 1rem; font-weight: 700; }
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8rem 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
 
-  /* CTA FINAL */
-  .cta-final {
-    background: var(--navy); text-align: center;
-    padding: 8rem 4rem;
-  }
-  .cta-final h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    font-weight: 800; color: var(--white);
-    letter-spacing: -0.03em; line-height: 1.1;
-    max-width: 700px; margin: 0 auto 1.25rem;
-  }
-  .cta-final p { color: rgba(248,247,244,0.55); font-size: 1rem; margin-bottom: 2.5rem; }
-  .cta-actions { display: flex; gap: 1rem; justify-content: center; }
-  .cta-reassure { margin-top: 1.5rem; font-size: 0.8rem; color: rgba(248,247,244,0.35); }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 900px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(0, 230, 118, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
 
-  /* FOOTER */
-  footer {
-    background: #0a1828; padding: 2.5rem 4rem;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .footer-logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--white); }
-  .footer-logo span { color: var(--green); }
-  .footer-text { font-size: 0.8rem; color: rgba(248,247,244,0.3); }
-  .footer-links { display: flex; gap: 1.5rem; }
-  .footer-links a { color: rgba(248,247,244,0.35); font-size: 0.8rem; text-decoration: none; }
-  .footer-links a:hover { color: rgba(248,247,244,0.7); }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0, 230, 118, 0.1);
+      border: 1px solid rgba(0, 230, 118, 0.25);
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      color: var(--green);
+      font-weight: 500;
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
 
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .hero > * { animation: fadeUp 0.7s ease both; }
-  .hero-eyebrow { animation-delay: 0.1s; }
-  .hero h1 { animation-delay: 0.2s; }
-  .hero-sub { animation-delay: 0.3s; }
-  .hero-actions { animation-delay: 0.4s; }
-  .social-proof { animation-delay: 0.5s; }
-  .hero-visual { animation-delay: 0.6s; }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--white);
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+    }
 
-  @media (max-width: 900px) {
-    nav { padding: 1rem 2rem; }
-    .nav-links { display: none; }
-    section { padding: 4rem 2rem; }
-    .problem-grid, .features-grid, .pricing-grid, .flow-steps { grid-template-columns: 1fr; }
-    .stats-bar { grid-template-columns: 1fr; }
-    .testi-grid { grid-template-columns: 1fr; }
-    .readiness-wrap { grid-template-columns: 1fr; }
-    .hero { padding: 7rem 2rem 5rem; }
-    .hero-actions { flex-direction: column; align-items: stretch; text-align: center; }
-    .hv-body { grid-template-columns: 1fr; }
-    .trust-strip { gap: 1.25rem; padding: 1.5rem 2rem; }
-    footer { flex-direction: column; gap: 1rem; text-align: center; }
-    .flow-step::after { display: none; }
-    .price-card.featured { transform: none; }
-    .cta-actions { flex-direction: column; align-items: center; }
-  }
-</style>
+    .hero h1 em {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      color: rgba(248, 247, 244, 0.65);
+      max-width: 620px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: var(--navy);
+      padding: 0.875rem 2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: 'Syne', sans-serif;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dim);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      padding: 0.875rem 2rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .social-proof {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 1.25rem 2.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: rgba(248, 247, 244, 0.6);
+    }
+
+    .proof-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    /* HERO DASHBOARD MOCKUP */
+    .hero-visual {
+      width: 100%;
+      max-width: 800px;
+      margin: 3.5rem auto 0;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      font-size: 0.78rem;
+    }
+
+    .hv-bar {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hv-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .hv-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .hv-card {
+      background: var(--navy-mid);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .hv-label {
+      color: rgba(248, 247, 244, 0.4);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+
+    .hv-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .hv-sub {
+      font-size: 0.72rem;
+      color: var(--green);
+      margin-top: 0.2rem;
+    }
+
+    .hv-full {
+      grid-column: 1 / -1;
+      background: var(--navy-mid);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .hv-progress-wrap {
+      margin-top: 0.75rem;
+    }
+
+    .hv-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hv-pname {
+      color: rgba(248, 247, 244, 0.6);
+      width: 160px;
+      flex-shrink: 0;
+      font-size: 0.72rem;
+    }
+
+    .hv-bar-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .hv-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--green);
+      transition: width 1.5s ease;
+    }
+
+    .hv-pval {
+      color: var(--white);
+      font-weight: 500;
+      font-size: 0.72rem;
+      width: 40px;
+      text-align: right;
+    }
+
+    .hv-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--green);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+      margin-top: 0.5rem;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 4rem;
+    }
+
+    .section-eyebrow {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--green);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--slate);
+      max-width: 560px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    .centered .section-sub {
+      margin: 0 auto;
+    }
+
+    /* PROBLEM SECTION */
+    .problem {
+      background: #f4f3f0;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      margin-top: 3.5rem;
+      background: rgba(13, 31, 60, 0.12);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .prob-card {
+      background: var(--white);
+      padding: 2.5rem 2rem;
+    }
+
+    .prob-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+    }
+
+    .prob-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .prob-card p {
+      color: var(--slate);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: var(--navy);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    .stat-item {
+      background: var(--navy-mid);
+      padding: 2rem;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-label {
+      color: rgba(248, 247, 244, 0.6);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+
+    .feat-card {
+      background: var(--white);
+      border: 1px solid var(--border-dark);
+      border-radius: 16px;
+      padding: 2.25rem;
+      transition: all 0.25s;
+    }
+
+    .feat-card:hover {
+      box-shadow: 0 8px 32px rgba(13, 31, 60, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .feat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .feat-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feat-card blockquote {
+      font-size: 0.9rem;
+      color: var(--slate);
+      font-style: italic;
+      border-left: 3px solid var(--green);
+      padding-left: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .feat-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      background: #eef2f7;
+      color: var(--navy);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* FLOW */
+    .flow-section {
+      background: var(--navy);
+    }
+
+    .flow-section .section-title {
+      color: var(--white);
+    }
+
+    .flow-section .section-sub {
+      color: rgba(248, 247, 244, 0.55);
+    }
+
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 3.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .flow-step {
+      background: var(--navy-mid);
+      padding: 2rem 1.75rem;
+      position: relative;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--green);
+      font-size: 1.25rem;
+      z-index: 2;
+    }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .flow-step h4 {
+      font-family: 'Syne', sans-serif;
+      color: var(--white);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .flow-bullets {
+      list-style: none;
+    }
+
+    .flow-bullets li {
+      color: rgba(248, 247, 244, 0.55);
+      font-size: 0.8rem;
+      line-height: 1.6;
+      padding: 0.2rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .flow-bullets li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-top: 0.55rem;
+      flex-shrink: 0;
+    }
+
+    /* PRICING */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+      align-items: start;
+    }
+
+    .price-card {
+      border: 1px solid var(--border-dark);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    .price-card.featured {
+      border-color: var(--navy);
+      border-width: 2px;
+      transform: scale(1.03);
+    }
+
+    .price-header {
+      padding: 1.75rem 2rem;
+      background: #f8f7f4;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .price-card.featured .price-header {
+      background: var(--navy);
+    }
+
+    .price-tier {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      color: var(--slate);
+      margin-bottom: 0.5rem;
+    }
+
+    .price-card.featured .price-tier {
+      color: rgba(248, 247, 244, 0.5);
+    }
+
+    .price-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .price-card.featured .price-amount {
+      color: var(--white);
+    }
+
+    .price-amount span {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--slate);
+    }
+
+    .price-card.featured .price-amount span {
+      color: rgba(248, 247, 244, 0.5);
+    }
+
+    .price-body {
+      padding: 1.75rem 2rem;
+    }
+
+    .price-features {
+      list-style: none;
+    }
+
+    .price-features li {
+      font-size: 0.875rem;
+      color: var(--slate);
+      padding: 0.45rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 1px solid rgba(13, 31, 60, 0.06);
+    }
+
+    .price-features li:last-child {
+      border-bottom: none;
+    }
+
+    .chk {
+      color: var(--green);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .price-cta {
+      display: block;
+      text-align: center;
+      padding: 0.875rem;
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      margin-top: 1.5rem;
+      transition: all 0.2s;
+    }
+
+    .price-cta-outline {
+      border: 1.5px solid var(--navy);
+      color: var(--navy);
+    }
+
+    .price-cta-outline:hover {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .price-cta-fill {
+      background: var(--green);
+      color: var(--navy);
+    }
+
+    .price-cta-fill:hover {
+      background: var(--green-dim);
+    }
+
+    .best-badge {
+      background: var(--green);
+      color: var(--navy);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* READINESS SCORE */
+    .readiness-section {
+      background: #f4f3f0;
+    }
+
+    .readiness-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-top: 3.5rem;
+      align-items: center;
+    }
+
+    .score-widget {
+      background: var(--white);
+      border: 1px solid var(--border-dark);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .score-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.75rem;
+    }
+
+    .score-header h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .score-ring-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .score-ring {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: conic-gradient(#00E676 0% 72%, #e5e7eb 72% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .score-ring::before {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--white);
+    }
+
+    .score-ring span {
+      position: relative;
+      z-index: 1;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .score-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .score-sub {
+      font-size: 0.8rem;
+      color: var(--slate);
+      margin-top: 0.2rem;
+    }
+
+    .score-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .score-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .si-icon {
+      width: 18px;
+      font-size: 0.9rem;
+    }
+
+    .si-name {
+      flex: 1;
+      font-size: 0.8rem;
+      color: var(--navy);
+    }
+
+    .si-bar {
+      flex: 2;
+      height: 5px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .si-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .si-score {
+      font-size: 0.75rem;
+      color: var(--slate);
+      font-weight: 500;
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .readiness-copy {}
+
+    .readiness-copy p {
+      color: var(--slate);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .score-levels {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .sl-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .sl-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sl-text {
+      font-size: 0.85rem;
+    }
+
+    .sl-text strong {
+      font-weight: 600;
+    }
+
+    /* TESTIMONIALS */
+    .testimonials {
+      background: var(--navy);
+    }
+
+    .testimonials .section-title {
+      color: var(--white);
+    }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .testi-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+    }
+
+    .testi-quote {
+      font-size: 0.95rem;
+      color: rgba(248, 247, 244, 0.75);
+      line-height: 1.75;
+      font-style: italic;
+      margin-bottom: 1.25rem;
+    }
+
+    .testi-quote::before {
+      content: '"';
+      color: var(--green);
+      font-size: 1.5rem;
+      font-style: normal;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .testi-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--navy-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--green);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+    }
+
+    .testi-name {
+      font-weight: 600;
+      color: var(--white);
+      font-size: 0.875rem;
+    }
+
+    .testi-role {
+      color: rgba(248, 247, 244, 0.45);
+      font-size: 0.775rem;
+    }
+
+    /* TRUST */
+    .trust-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      padding: 2rem 4rem;
+      background: #eef2f7;
+      border-top: 1px solid var(--border-dark);
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--slate);
+    }
+
+    .trust-chk {
+      color: var(--green);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    /* CTA FINAL */
+    .cta-final {
+      background: var(--navy);
+      text-align: center;
+      padding: 8rem 4rem;
+    }
+
+    .cta-final h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      max-width: 700px;
+      margin: 0 auto 1.25rem;
+    }
+
+    .cta-final p {
+      color: rgba(248, 247, 244, 0.55);
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .cta-reassure {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: rgba(248, 247, 244, 0.35);
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0a1828;
+      padding: 2.5rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .footer-logo span {
+      color: var(--green);
+    }
+
+    .footer-text {
+      font-size: 0.8rem;
+      color: rgba(248, 247, 244, 0.3);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: rgba(248, 247, 244, 0.35);
+      font-size: 0.8rem;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: rgba(248, 247, 244, 0.7);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero>* {
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .hero-eyebrow {
+      animation-delay: 0.1s;
+    }
+
+    .hero h1 {
+      animation-delay: 0.2s;
+    }
+
+    .hero-sub {
+      animation-delay: 0.3s;
+    }
+
+    .hero-actions {
+      animation-delay: 0.4s;
+    }
+
+    .social-proof {
+      animation-delay: 0.5s;
+    }
+
+    .hero-visual {
+      animation-delay: 0.6s;
+    }
+
+    @media (max-width: 900px) {
+      nav {
+        padding: 1rem 2rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section {
+        padding: 4rem 2rem;
+      }
+
+      .problem-grid,
+      .features-grid,
+      .pricing-grid,
+      .flow-steps {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .testi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .readiness-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 7rem 2rem 5rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+
+      .hv-body {
+        grid-template-columns: 1fr;
+      }
+
+      .trust-strip {
+        gap: 1.25rem;
+        padding: 1.5rem 2rem;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .flow-step::after {
+        display: none;
+      }
+
+      .price-card.featured {
+        transform: none;
+      }
+
+      .cta-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="logo">UP<span>SKILL</span></div>
-  <ul class="nav-links">
-    <li><a href="#features">Fonctionnalités</a></li>
-    <li><a href="#comment">Comment ça marche</a></li>
-    <li><a href="#pricing">Tarifs</a></li>
-    <li><a href="#temoignages">Témoignages</a></li>
-  </ul>
-  <a href="#cta" class="nav-cta">Démarrer gratuitement</a>
-</nav>
+  <!-- NAV -->
+  <nav>
+    <div class="logo">UP<span>SKILL</span></div>
+    <ul class="nav-links">
+      <li><a href="#features">Fonctionnalités</a></li>
+      <li><a href="#comment">Comment ça marche</a></li>
+      <li><a href="#pricing">Tarifs</a></li>
+      <li><a href="#temoignages">Témoignages</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Démarrer gratuitement</a>
+  </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-eyebrow">
-    <span></span> · AI-Powered CSF + LMS Platform
-  </div>
-  <h1>Formez. Récupérez. <em>Sans la paperasse.</em></h1>
-  <p class="hero-sub">UPSKILL automatise vos formations OFPPT/CSF, génère vos dossiers de remboursement, et propulse l'apprentissage de vos équipes — tout en un.</p>
-  <div class="hero-actions">
-    <a href="#cta" class="btn-primary">Démarrer Gratuitement →</a>
-    <a href="#comment" class="btn-secondary">▶ Voir la Démo</a>
-  </div>
-  <div class="social-proof">
-    <div class="proof-item"><div class="proof-dot"></div>Utilisé par +200 entreprises au Maroc</div>
-    <div class="proof-item"><div class="proof-dot"></div>Compatible OFPPT 2024</div>
-    <div class="proof-item"><div class="proof-dot"></div>CNSS &amp; CMR compliant</div>
-  </div>
-
-  <!-- Dashboard mockup -->
-  <div class="hero-visual">
-    <div class="hv-bar">
-      <div class="hv-dot" style="background:#ef4444"></div>
-      <div class="hv-dot" style="background:#f59e0b"></div>
-      <div class="hv-dot" style="background:#22c55e"></div>
-      <span style="color:rgba(248,247,244,0.3);margin-left:0.5rem;font-size:0.72rem">UPSKILL Dashboard — SONATROF Industries</span>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span></span> · AI-Powered CSF + LMS Platform
     </div>
-    <div class="hv-body">
-      <div class="hv-card">
-        <div class="hv-label">CFF Disponible</div>
-        <div class="hv-value">24 800</div>
-        <div class="hv-sub">MAD · Exercice 2026</div>
+    <h1>Formez. Récupérez. <em>Sans la paperasse.</em></h1>
+    <p class="hero-sub">UPSKILL automatise vos formations OFPPT/CSF, génère vos dossiers de remboursement, et propulse
+      l'apprentissage de vos équipes — tout en un.</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">Démarrer Gratuitement →</a>
+      <a href="#comment" class="btn-secondary">▶ Voir la Démo</a>
+    </div>
+    <div class="social-proof">
+      <div class="proof-item">
+        <div class="proof-dot"></div>Utilisé par +200 entreprises au Maroc
       </div>
-      <div class="hv-card">
-        <div class="hv-label">Score CSF</div>
-        <div class="hv-value">95%</div>
-        <div class="hv-sub">✓ Prêt à soumettre</div>
+      <div class="proof-item">
+        <div class="proof-dot"></div>Compatible OFPPT 2024
       </div>
-      <div class="hv-card">
-        <div class="hv-label">Remboursé YTD</div>
-        <div class="hv-value">18 400</div>
-        <div class="hv-sub">MAD récupérés</div>
+      <div class="proof-item">
+        <div class="proof-dot"></div>CNSS &amp; CMR compliant
       </div>
-      <div class="hv-full">
-        <div class="hv-label" style="margin-bottom:0.75rem">Progression des formations en cours</div>
-        <div class="hv-progress-wrap">
-          <div class="hv-progress-row">
-            <span class="hv-pname">HSE &amp; Sécurité Industrielle</span>
-            <div class="hv-bar-track"><div class="hv-bar-fill" style="width:87%"></div></div>
-            <span class="hv-pval">87%</span>
+    </div>
+
+    <!-- Dashboard mockup -->
+    <div class="hero-visual">
+      <div class="hv-bar">
+        <div class="hv-dot" style="background:#ef4444"></div>
+        <div class="hv-dot" style="background:#f59e0b"></div>
+        <div class="hv-dot" style="background:#22c55e"></div>
+        <span style="color:rgba(248,247,244,0.3);margin-left:0.5rem;font-size:0.72rem">UPSKILL Dashboard — SONATROF
+          Industries</span>
+      </div>
+      <div class="hv-body">
+        <div class="hv-card">
+          <div class="hv-label">CFF Disponible</div>
+          <div class="hv-value">24 800</div>
+          <div class="hv-sub">MAD · Exercice 2026</div>
+        </div>
+        <div class="hv-card">
+          <div class="hv-label">Score CSF</div>
+          <div class="hv-value">95%</div>
+          <div class="hv-sub">✓ Prêt à soumettre</div>
+        </div>
+        <div class="hv-card">
+          <div class="hv-label">Remboursé YTD</div>
+          <div class="hv-value">18 400</div>
+          <div class="hv-sub">MAD récupérés</div>
+        </div>
+        <div class="hv-full">
+          <div class="hv-label" style="margin-bottom:0.75rem">Progression des formations en cours</div>
+          <div class="hv-progress-wrap">
+            <div class="hv-progress-row">
+              <span class="hv-pname">HSE &amp; Sécurité Industrielle</span>
+              <div class="hv-bar-track">
+                <div class="hv-bar-fill" style="width:87%"></div>
+              </div>
+              <span class="hv-pval">87%</span>
+            </div>
+            <div class="hv-progress-row">
+              <span class="hv-pname">Excel Avancé pour DRH</span>
+              <div class="hv-bar-track">
+                <div class="hv-bar-fill" style="width:64%"></div>
+              </div>
+              <span class="hv-pval">64%</span>
+            </div>
+            <div class="hv-progress-row">
+              <span class="hv-pname">Lean Manufacturing</span>
+              <div class="hv-bar-track">
+                <div class="hv-bar-fill" style="width:40%"></div>
+              </div>
+              <span class="hv-pval">40%</span>
+            </div>
           </div>
-          <div class="hv-progress-row">
-            <span class="hv-pname">Excel Avancé pour DRH</span>
-            <div class="hv-bar-track"><div class="hv-bar-fill" style="width:64%"></div></div>
-            <span class="hv-pval">64%</span>
-          </div>
-          <div class="hv-progress-row">
-            <span class="hv-pname">Lean Manufacturing</span>
-            <div class="hv-bar-track"><div class="hv-bar-fill" style="width:40%"></div></div>
-            <span class="hv-pval">40%</span>
-          </div>
+          <div class="hv-badge">Dossier CSF Prêt ✓</div>
         </div>
-        <div class="hv-badge">Dossier CSF Prêt ✓</div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- PROBLEM -->
-<section class="problem" id="problem">
-  <p class="section-eyebrow">Le problème</p>
-  <h2 class="section-title">La formation au Maroc, c'est compliqué.</h2>
-  <p class="section-sub">Les DRH marocains font face à un système CSF opaque, chronophage, et source de rejets coûteux.</p>
+  <!-- PROBLEM -->
+  <section class="problem" id="problem">
+    <p class="section-eyebrow">Le problème</p>
+    <h2 class="section-title">La formation au Maroc, c'est compliqué.</h2>
+    <p class="section-sub">Les DRH marocains font face à un système CSF opaque, chronophage, et source de rejets
+      coûteux.</p>
 
-  <div class="problem-grid">
-    <div class="prob-card">
-      <div class="prob-icon">🗂</div>
-      <h3>Paperasse CSF</h3>
-      <p>Les DRH passent des heures à remplir manuellement les formulaires CSF, souvent incomplets ou non-conformes aux exigences OFPPT.</p>
+    <div class="problem-grid">
+      <div class="prob-card">
+        <div class="prob-icon">🗂</div>
+        <h3>Paperasse CSF</h3>
+        <p>Les DRH passent des heures à remplir manuellement les formulaires CSF, souvent incomplets ou non-conformes
+          aux exigences OFPPT.</p>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">⏳</div>
+        <h3>Temps Perdu</h3>
+        <p>Les entreprises forment leurs équipes mais oublient de soumettre dans les délais — perdant jusqu'à 75% de
+          leur CFF annuel.</p>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">❌</div>
+        <h3>Rejets OFPPT</h3>
+        <p>1 dossier sur 3 est rejeté pour erreur de format, données manquantes, ou programme non-éligible. Resoumission
+          = semaines perdues.</p>
+      </div>
     </div>
-    <div class="prob-card">
-      <div class="prob-icon">⏳</div>
-      <h3>Temps Perdu</h3>
-      <p>Les entreprises forment leurs équipes mais oublient de soumettre dans les délais — perdant jusqu'à 75% de leur CFF annuel.</p>
-    </div>
-    <div class="prob-card">
-      <div class="prob-icon">❌</div>
-      <h3>Rejets OFPPT</h3>
-      <p>1 dossier sur 3 est rejeté pour erreur de format, données manquantes, ou programme non-éligible. Resoumission = semaines perdues.</p>
-    </div>
-  </div>
 
-  <div class="stats-bar">
-    <div class="stat-item">
-      <div class="stat-num">6 Mrd MAD</div>
-      <div class="stat-label">collectés par l'OFPPT chaque année</div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num">6 Mrd MAD</div>
+        <div class="stat-label">collectés par l'OFPPT chaque année</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">40%</div>
+        <div class="stat-label">seulement des entreprises récupèrent leur CSF</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">120K MAD</div>
+        <div class="stat-label">perdus en moyenne par PME chaque année</div>
+      </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">40%</div>
-      <div class="stat-label">seulement des entreprises récupèrent leur CSF</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">120K MAD</div>
-      <div class="stat-label">perdus en moyenne par PME chaque année</div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- FEATURES -->
-<section id="features">
-  <div class="centered">
-    <p class="section-eyebrow">La solution</p>
-    <h2 class="section-title">L'IA qui connaît le CSF<br>mieux que votre comptable.</h2>
-    <p class="section-sub">Quatre modules intelligents, une seule plateforme. Du choix de formation à l'encaissement du remboursement.</p>
-  </div>
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="centered">
+      <p class="section-eyebrow">La solution</p>
+      <h2 class="section-title">L'IA qui connaît le CSF<br>mieux que votre comptable.</h2>
+      <p class="section-sub">Quatre modules intelligents, une seule plateforme. Du choix de formation à l'encaissement
+        du remboursement.</p>
+    </div>
 
-  <div class="features-grid">
-    <div class="feat-card">
-      <div class="feat-num">Feature 01</div>
-      <h3>AI CSF Document Generator</h3>
-      <blockquote>Générez un dossier CSF complet en moins de 5 minutes.</blockquote>
-      <p style="font-size:0.875rem;color:var(--slate);line-height:1.7">Auto-remplissage du programme de formation, objectifs pédagogiques, budget prévisionnel. Export PDF conforme aux exigences OFPPT 2024 avec validation automatique.</p>
-      <div class="feat-tags">
-        <span class="tag">Convention de formation</span>
-        <span class="tag">Budget auto</span>
-        <span class="tag">Export ZIP OFPPT</span>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-num">Feature 01</div>
+        <h3>AI CSF Document Generator</h3>
+        <blockquote>Générez un dossier CSF complet en moins de 5 minutes.</blockquote>
+        <p style="font-size:0.875rem;color:var(--slate);line-height:1.7">Auto-remplissage du programme de formation,
+          objectifs pédagogiques, budget prévisionnel. Export PDF conforme aux exigences OFPPT 2024 avec validation
+          automatique.</p>
+        <div class="feat-tags">
+          <span class="tag">Convention de formation</span>
+          <span class="tag">Budget auto</span>
+          <span class="tag">Export ZIP OFPPT</span>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">Feature 02</div>
+        <h3>AI LMS Tutor</h3>
+        <blockquote>Un formateur IA disponible 24h/24, en français et en arabe.</blockquote>
+        <p style="font-size:0.875rem;color:var(--slate);line-height:1.7">Répond aux questions des apprenants sur le
+          contenu, génère des quiz adaptatifs, explique en Darija marocain. Suivi personnalisé des lacunes.</p>
+        <div class="feat-tags">
+          <span class="tag">Bilingue fr/ar</span>
+          <span class="tag">Darija option</span>
+          <span class="tag">Quiz adaptatifs</span>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">Feature 03</div>
+        <h3>CSF-Ready Marketplace</h3>
+        <blockquote>Toutes les formations affichent leur éligibilité CSF et le montant remboursable.</blockquote>
+        <p style="font-size:0.875rem;color:var(--slate);line-height:1.7">Badge CSF ✓ sur chaque cours éligible. Calcul
+          en temps réel du montant récupérable. Accès aux organismes agréés OFPPT.</p>
+        <div class="feat-tags">
+          <span class="tag">Badge CSF ✓</span>
+          <span class="tag">Montant en temps réel</span>
+          <span class="tag">Filtres secteur</span>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-num">Feature 04</div>
+        <h3>Automated Reporting System</h3>
+        <blockquote>Votre audit OFPPT, prêt avant même qu'on vous le demande.</blockquote>
+        <p style="font-size:0.875rem;color:var(--slate);line-height:1.7">Dashboard RH avec indicateurs CSF en temps
+          réel. Rapports de présence générés automatiquement. Alertes délais de soumission.</p>
+        <div class="feat-tags">
+          <span class="tag">Dashboard RH</span>
+          <span class="tag">Présences auto</span>
+          <span class="tag">Alertes délais</span>
+        </div>
       </div>
     </div>
-    <div class="feat-card">
-      <div class="feat-num">Feature 02</div>
-      <h3>AI LMS Tutor</h3>
-      <blockquote>Un formateur IA disponible 24h/24, en français et en arabe.</blockquote>
-      <p style="font-size:0.875rem;color:var(--slate);line-height:1.7">Répond aux questions des apprenants sur le contenu, génère des quiz adaptatifs, explique en Darija marocain. Suivi personnalisé des lacunes.</p>
-      <div class="feat-tags">
-        <span class="tag">Bilingue fr/ar</span>
-        <span class="tag">Darija option</span>
-        <span class="tag">Quiz adaptatifs</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-num">Feature 03</div>
-      <h3>CSF-Ready Marketplace</h3>
-      <blockquote>Toutes les formations affichent leur éligibilité CSF et le montant remboursable.</blockquote>
-      <p style="font-size:0.875rem;color:var(--slate);line-height:1.7">Badge CSF ✓ sur chaque cours éligible. Calcul en temps réel du montant récupérable. Accès aux organismes agréés OFPPT.</p>
-      <div class="feat-tags">
-        <span class="tag">Badge CSF ✓</span>
-        <span class="tag">Montant en temps réel</span>
-        <span class="tag">Filtres secteur</span>
-      </div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-num">Feature 04</div>
-      <h3>Automated Reporting System</h3>
-      <blockquote>Votre audit OFPPT, prêt avant même qu'on vous le demande.</blockquote>
-      <p style="font-size:0.875rem;color:var(--slate);line-height:1.7">Dashboard RH avec indicateurs CSF en temps réel. Rapports de présence générés automatiquement. Alertes délais de soumission.</p>
-      <div class="feat-tags">
-        <span class="tag">Dashboard RH</span>
-        <span class="tag">Présences auto</span>
-        <span class="tag">Alertes délais</span>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- HOW IT WORKS -->
-<section class="flow-section" id="comment">
-  <div class="centered">
-    <p class="section-eyebrow" style="color:var(--green)">Comment ça marche</p>
-    <h2 class="section-title">6 étapes. De zéro à remboursé.</h2>
-    <p class="section-sub" style="max-width:560px;margin:0 auto">L'IA prend en charge toute la complexité administrative — vous gérez juste la formation.</p>
-  </div>
-  <div class="flow-steps">
-    <div class="flow-step">
-      <div class="step-num">Étape 01</div>
-      <h4>Évaluation des besoins</h4>
-      <ul class="flow-bullets">
-        <li>Analyse de la masse salariale CNSS</li>
-        <li>Calcul du CFF disponible (0.2%)</li>
-        <li>Recommandations de formations prioritaires</li>
-      </ul>
+  <!-- HOW IT WORKS -->
+  <section class="flow-section" id="comment">
+    <div class="centered">
+      <p class="section-eyebrow" style="color:var(--green)">Comment ça marche</p>
+      <h2 class="section-title">6 étapes. De zéro à remboursé.</h2>
+      <p class="section-sub" style="max-width:560px;margin:0 auto">L'IA prend en charge toute la complexité
+        administrative — vous gérez juste la formation.</p>
     </div>
-    <div class="flow-step">
-      <div class="step-num">Étape 02</div>
-      <h4>Sélection de formation</h4>
-      <ul class="flow-bullets">
-        <li>Marketplace certifié OFPPT</li>
-        <li>Badge CSF-Éligible affiché</li>
-        <li>Montant remboursable calculé auto</li>
-      </ul>
-    </div>
-    <div class="flow-step">
-      <div class="step-num">Étape 03</div>
-      <h4>Génération du dossier CSF</h4>
-      <ul class="flow-bullets">
-        <li>Convention de formation auto</li>
-        <li>Programme format OFPPT</li>
-        <li>Budget prévisionnel</li>
-      </ul>
-    </div>
-    <div class="flow-step">
-      <div class="step-num">Étape 04</div>
-      <h4>Formation sur LMS</h4>
-      <ul class="flow-bullets">
-        <li>Présences tracées automatiquement</li>
-        <li>Évaluations générées et stockées</li>
-        <li>Progression en temps réel</li>
-      </ul>
-    </div>
-    <div class="flow-step">
-      <div class="step-num">Étape 05</div>
-      <h4>Compilation des preuves</h4>
-      <ul class="flow-bullets">
-        <li>Feuilles de présence PDF</li>
-        <li>Attestations de formation</li>
-        <li>Factures compilées</li>
-      </ul>
-    </div>
-    <div class="flow-step">
-      <div class="step-num">Étape 06</div>
-      <h4>Soumission OFPPT</h4>
-      <ul class="flow-bullets">
-        <li>Checklist conformité ✓</li>
-        <li>Contact délégation locale</li>
-        <li>Suivi remboursement dashboard</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- READINESS SCORE -->
-<section class="readiness-section" id="readiness">
-  <div class="readiness-wrap">
-    <div>
-      <p class="section-eyebrow">Score de Préparation CSF</p>
-      <h2 class="section-title">Sachez exactement où vous en êtes.</h2>
-      <div class="readiness-copy">
-        <p>Le Score de Préparation CSF est un indicateur de santé dynamique (0–100%) visible en permanence sur votre tableau de bord. Il vous dit exactement ce qu'il manque pour générer un dossier validé.</p>
-        <p>Alimenté par 6 composantes clés : identité entreprise, masse salariale, liste d'employés, formation sélectionnée, attestation CNSS, et dossier actif.</p>
-        <div class="score-levels">
-          <div class="sl-item">
-            <div class="sl-dot" style="background:#ef4444"></div>
-            <div class="sl-text"><strong>0–39% — Non-prêt</strong> : guide pas-à-pas activé</div>
-          </div>
-          <div class="sl-item">
-            <div class="sl-dot" style="background:#f59e0b"></div>
-            <div class="sl-text"><strong>40–64% — En cours</strong> : actions prioritaires listées</div>
-          </div>
-          <div class="sl-item">
-            <div class="sl-dot" style="background:#84cc16"></div>
-            <div class="sl-text"><strong>65–84% — Presque prêt</strong> : 2–3 dernières actions</div>
-          </div>
-          <div class="sl-item">
-            <div class="sl-dot" style="background:#00E676"></div>
-            <div class="sl-text"><strong>85–100% — Prêt CSF ✓</strong> : générez votre dossier maintenant</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="score-widget">
-      <div class="score-header">
-        <h4>Score de Préparation CSF</h4>
-        <span style="font-size:0.75rem;color:var(--slate)">SONATROF Industries</span>
-      </div>
-      <div class="score-ring-wrap">
-        <div class="score-ring"><span>72%</span></div>
-        <div>
-          <div class="score-label" style="color:#84cc16">Presque prêt</div>
-          <div class="score-sub">2–3 actions restantes</div>
-        </div>
-      </div>
-      <div class="score-items">
-        <div class="score-item">
-          <span class="si-icon" style="color:#00E676">✓</span>
-          <span class="si-name">Identité entreprise</span>
-          <div class="si-bar"><div class="si-fill" style="width:100%;background:#00E676"></div></div>
-          <span class="si-score">20/20</span>
-        </div>
-        <div class="score-item">
-          <span class="si-icon" style="color:#00E676">✓</span>
-          <span class="si-name">Masse salariale &amp; CFF</span>
-          <div class="si-bar"><div class="si-fill" style="width:100%;background:#00E676"></div></div>
-          <span class="si-score">15/15</span>
-        </div>
-        <div class="score-item">
-          <span class="si-icon" style="color:#84cc16">~</span>
-          <span class="si-name">Employés importés</span>
-          <div class="si-bar"><div class="si-fill" style="width:80%;background:#84cc16"></div></div>
-          <span class="si-score">12/15</span>
-        </div>
-        <div class="score-item">
-          <span class="si-icon" style="color:#00E676">✓</span>
-          <span class="si-name">Formation sélectionnée</span>
-          <div class="si-bar"><div class="si-fill" style="width:100%;background:#00E676"></div></div>
-          <span class="si-score">20/20</span>
-        </div>
-        <div class="score-item">
-          <span class="si-icon" style="color:#ef4444">!</span>
-          <span class="si-name">Attestation CNSS</span>
-          <div class="si-bar"><div class="si-fill" style="width:0%;background:#ef4444"></div></div>
-          <span class="si-score" style="color:#ef4444">0/15</span>
-        </div>
-        <div class="score-item">
-          <span class="si-icon" style="color:#f59e0b">○</span>
-          <span class="si-name">Dossier CSF actif</span>
-          <div class="si-bar"><div class="si-fill" style="width:33%;background:#f59e0b"></div></div>
-          <span class="si-score">5/15</span>
-        </div>
-      </div>
-      <div style="margin-top:1.5rem;display:flex;gap:0.75rem">
-        <a href="#cta" class="price-cta price-cta-outline" style="flex:1;margin-top:0;font-size:0.78rem;padding:0.65rem">Compléter mon profil →</a>
-        <a href="#cta" class="price-cta price-cta-fill" style="flex:1;margin-top:0;font-size:0.78rem;padding:0.65rem">Générer mon dossier →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section id="pricing">
-  <div class="centered">
-    <p class="section-eyebrow">Tarifs</p>
-    <h2 class="section-title">Un plan pour chaque structure.</h2>
-    <p class="section-sub">Du gratuit pour les coopératives, jusqu'à l'enterprise pour les grandes PME. Annulation à tout moment.</p>
-  </div>
-  <div class="pricing-grid">
-    <div class="price-card">
-      <div class="price-header">
-        <div class="price-tier">Coopérative / Association</div>
-        <div class="price-amount">Gratuit<span> / toujours</span></div>
-      </div>
-      <div class="price-body">
-        <ul class="price-features">
-          <li><span class="chk">✓</span> LMS de base (5 cours)</li>
-          <li><span class="chk">✓</span> 1 formateur IA</li>
-          <li><span class="chk">✓</span> Sponsoring CSR disponible</li>
-          <li style="opacity:0.4">— Automatisation CSF</li>
-          <li style="opacity:0.4">— Marketplace access</li>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">Étape 01</div>
+        <h4>Évaluation des besoins</h4>
+        <ul class="flow-bullets">
+          <li>Analyse de la masse salariale CNSS</li>
+          <li>Calcul du CFF disponible (0.2%)</li>
+          <li>Recommandations de formations prioritaires</li>
         </ul>
-        <a href="#cta" class="price-cta price-cta-outline">Commencer gratuitement</a>
       </div>
-    </div>
-
-    <div class="price-card featured">
-      <div class="price-header">
-        <div class="best-badge">Recommandé</div>
-        <div class="price-tier">PME Starter</div>
-        <div class="price-amount">990<span> MAD/mois</span></div>
-      </div>
-      <div class="price-body">
-        <ul class="price-features">
-          <li><span class="chk">✓</span> Jusqu'à 50 employés</li>
-          <li><span class="chk">✓</span> LMS complet + AI Tutor</li>
-          <li><span class="chk">✓</span> AI CSF Generator (10 dossiers)</li>
-          <li><span class="chk">✓</span> Marketplace access</li>
-          <li><span class="chk">✓</span> Dashboard RH + support email</li>
+      <div class="flow-step">
+        <div class="step-num">Étape 02</div>
+        <h4>Sélection de formation</h4>
+        <ul class="flow-bullets">
+          <li>Marketplace certifié OFPPT</li>
+          <li>Badge CSF-Éligible affiché</li>
+          <li>Montant remboursable calculé auto</li>
         </ul>
-        <a href="#cta" class="price-cta price-cta-fill">Démarrer l'essai gratuit</a>
       </div>
-    </div>
-
-    <div class="price-card">
-      <div class="price-header">
-        <div class="price-tier">Enterprise</div>
-        <div class="price-amount">2 490<span> MAD/mois</span></div>
-      </div>
-      <div class="price-body">
-        <ul class="price-features">
-          <li><span class="chk">✓</span> Employés illimités</li>
-          <li><span class="chk">✓</span> Toutes les fonctionnalités IA</li>
-          <li><span class="chk">✓</span> Dossiers CSF illimités</li>
-          <li><span class="chk">✓</span> Intégration SIRH (Paie.ma, Sage)</li>
-          <li><span class="chk">✓</span> Support dédié + onboarding</li>
+      <div class="flow-step">
+        <div class="step-num">Étape 03</div>
+        <h4>Génération du dossier CSF</h4>
+        <ul class="flow-bullets">
+          <li>Convention de formation auto</li>
+          <li>Programme format OFPPT</li>
+          <li>Budget prévisionnel</li>
         </ul>
-        <a href="#cta" class="price-cta price-cta-outline">Planifier une démo</a>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">Étape 04</div>
+        <h4>Formation sur LMS</h4>
+        <ul class="flow-bullets">
+          <li>Présences tracées automatiquement</li>
+          <li>Évaluations générées et stockées</li>
+          <li>Progression en temps réel</li>
+        </ul>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">Étape 05</div>
+        <h4>Compilation des preuves</h4>
+        <ul class="flow-bullets">
+          <li>Feuilles de présence PDF</li>
+          <li>Attestations de formation</li>
+          <li>Factures compilées</li>
+        </ul>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">Étape 06</div>
+        <h4>Soumission OFPPT</h4>
+        <ul class="flow-bullets">
+          <li>Checklist conformité ✓</li>
+          <li>Contact délégation locale</li>
+          <li>Suivi remboursement dashboard</li>
+        </ul>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- WHITELIST REGISTRATION -->
-<section class="whitelist-section" style="background:var(--white);padding:5rem 4rem;text-align:center">
-  <div class="centered">
-    <p class="section-eyebrow">Accès en Liste Blanche</p>
-    <h2 class="section-title">Rejoignez la liste d'attente UPSKILL</h2>
-    <p class="section-sub" style="margin:0 auto 2.5rem">Les places sont limitées. Inscrivez-vous maintenant pour un accès prioritaire et 3 mois offerts.</p>
-
-    <form id="whitelist-form" style="max-width:480px;margin:0 auto;text-align:left">
-      <div style="display:grid;gap:1rem">
-        <div>
-          <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--navy)">Nom de l'entreprise *</label>
-          <input type="text" id="company" required placeholder="Ex: SONATROF Industries"
-            style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border-dark);border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s"
-            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border-dark)'">
+  <!-- READINESS SCORE -->
+  <section class="readiness-section" id="readiness">
+    <div class="readiness-wrap">
+      <div>
+        <p class="section-eyebrow">Score de Préparation CSF</p>
+        <h2 class="section-title">Sachez exactement où vous en êtes.</h2>
+        <div class="readiness-copy">
+          <p>Le Score de Préparation CSF est un indicateur de santé dynamique (0–100%) visible en permanence sur votre
+            tableau de bord. Il vous dit exactement ce qu'il manque pour générer un dossier validé.</p>
+          <p>Alimenté par 6 composantes clés : identité entreprise, masse salariale, liste d'employés, formation
+            sélectionnée, attestation CNSS, et dossier actif.</p>
+          <div class="score-levels">
+            <div class="sl-item">
+              <div class="sl-dot" style="background:#ef4444"></div>
+              <div class="sl-text"><strong>0–39% — Non-prêt</strong> : guide pas-à-pas activé</div>
+            </div>
+            <div class="sl-item">
+              <div class="sl-dot" style="background:#f59e0b"></div>
+              <div class="sl-text"><strong>40–64% — En cours</strong> : actions prioritaires listées</div>
+            </div>
+            <div class="sl-item">
+              <div class="sl-dot" style="background:#84cc16"></div>
+              <div class="sl-text"><strong>65–84% — Presque prêt</strong> : 2–3 dernières actions</div>
+            </div>
+            <div class="sl-item">
+              <div class="sl-dot" style="background:#00E676"></div>
+              <div class="sl-text"><strong>85–100% — Prêt CSF ✓</strong> : générez votre dossier maintenant</div>
+            </div>
+          </div>
         </div>
-        <div>
-          <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--navy)">Votre nom *</label>
-          <input type="text" id="name" required placeholder="Ex: Nisrine El Fassi"
-            style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border-dark);border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s"
-            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border-dark)'">
-        </div>
-        <div>
-          <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--navy)">Email professionnel *</label>
-          <input type="email" id="email" required placeholder="nisrine@sonatrof.ma"
-            style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border-dark);border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s"
-            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border-dark)'">
-        </div>
-        <div>
-          <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--navy)">Téléphone</label>
-          <input type="tel" id="phone" placeholder="06 12 34 56 78"
-            style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border-dark);border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s"
-            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border-dark)'">
-        </div>
-        <div id="form-message" style="display:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.85rem;margin-top:0.5rem"></div>
-        <button type="submit"
-          style="width:100%;padding:0.9rem;background:var(--green);color:var(--navy);border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:background 0.2s;margin-top:0.5rem"
-          onmouseover="this.style.background='var(--green-dim)'" onmouseout="this.style.background='var(--green)'">
-          S'inscrire sur la liste blanche →
-        </button>
-        <p style="font-size:0.75rem;color:var(--slate);text-align:center;margin-top:0.75rem">
-          En soumettant, vous acceptez de recevoir des communications UPSKILL. Désabonnement à tout moment.
-        </p>
       </div>
-    </form>
-  </div>
-</section>
+      <div class="score-widget">
+        <div class="score-header">
+          <h4>Score de Préparation CSF</h4>
+          <span style="font-size:0.75rem;color:var(--slate)">SONATROF Industries</span>
+        </div>
+        <div class="score-ring-wrap">
+          <div class="score-ring"><span>72%</span></div>
+          <div>
+            <div class="score-label" style="color:#84cc16">Presque prêt</div>
+            <div class="score-sub">2–3 actions restantes</div>
+          </div>
+        </div>
+        <div class="score-items">
+          <div class="score-item">
+            <span class="si-icon" style="color:#00E676">✓</span>
+            <span class="si-name">Identité entreprise</span>
+            <div class="si-bar">
+              <div class="si-fill" style="width:100%;background:#00E676"></div>
+            </div>
+            <span class="si-score">20/20</span>
+          </div>
+          <div class="score-item">
+            <span class="si-icon" style="color:#00E676">✓</span>
+            <span class="si-name">Masse salariale &amp; CFF</span>
+            <div class="si-bar">
+              <div class="si-fill" style="width:100%;background:#00E676"></div>
+            </div>
+            <span class="si-score">15/15</span>
+          </div>
+          <div class="score-item">
+            <span class="si-icon" style="color:#84cc16">~</span>
+            <span class="si-name">Employés importés</span>
+            <div class="si-bar">
+              <div class="si-fill" style="width:80%;background:#84cc16"></div>
+            </div>
+            <span class="si-score">12/15</span>
+          </div>
+          <div class="score-item">
+            <span class="si-icon" style="color:#00E676">✓</span>
+            <span class="si-name">Formation sélectionnée</span>
+            <div class="si-bar">
+              <div class="si-fill" style="width:100%;background:#00E676"></div>
+            </div>
+            <span class="si-score">20/20</span>
+          </div>
+          <div class="score-item">
+            <span class="si-icon" style="color:#ef4444">!</span>
+            <span class="si-name">Attestation CNSS</span>
+            <div class="si-bar">
+              <div class="si-fill" style="width:0%;background:#ef4444"></div>
+            </div>
+            <span class="si-score" style="color:#ef4444">0/15</span>
+          </div>
+          <div class="score-item">
+            <span class="si-icon" style="color:#f59e0b">○</span>
+            <span class="si-name">Dossier CSF actif</span>
+            <div class="si-bar">
+              <div class="si-fill" style="width:33%;background:#f59e0b"></div>
+            </div>
+            <span class="si-score">5/15</span>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;display:flex;gap:0.75rem">
+          <a href="#cta" class="price-cta price-cta-outline"
+            style="flex:1;margin-top:0;font-size:0.78rem;padding:0.65rem">Compléter mon profil →</a>
+          <a href="#cta" class="price-cta price-cta-fill"
+            style="flex:1;margin-top:0;font-size:0.78rem;padding:0.65rem">Générer mon dossier →</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- CTA FINAL -->
-<section class="cta-final" id="cta">
-  <h2>Votre prochain dossier CSF, prêt en 5 minutes.</h2>
-  <p>Sans carte bancaire. Installation en moins de 10 minutes. Annulation à tout moment.</p>
-  <div class="cta-actions">
-    <a href="#" class="btn-primary">Démarrer Gratuitement — Sans carte bancaire →</a>
-    <a href="#" class="btn-secondary">Planifier une Démo</a>
-  </div>
-  <p class="cta-reassure">Support en français et arabe · Données hébergées au Maroc · OFPPT compliant</p>
-</section>
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="centered">
+      <p class="section-eyebrow">Tarifs</p>
+      <h2 class="section-title">Un plan pour chaque structure.</h2>
+      <p class="section-sub">Du gratuit pour les coopératives, jusqu'à l'enterprise pour les grandes PME. Annulation à
+        tout moment.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-header">
+          <div class="price-tier">Coopérative / Association</div>
+          <div class="price-amount">Gratuit<span> / toujours</span></div>
+        </div>
+        <div class="price-body">
+          <ul class="price-features">
+            <li><span class="chk">✓</span> LMS de base (5 cours)</li>
+            <li><span class="chk">✓</span> 1 formateur IA</li>
+            <li><span class="chk">✓</span> Sponsoring CSR disponible</li>
+            <li style="opacity:0.4">— Automatisation CSF</li>
+            <li style="opacity:0.4">— Marketplace access</li>
+          </ul>
+          <a href="#cta" class="price-cta price-cta-outline">Commencer gratuitement</a>
+        </div>
+      </div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">UP<span>SKILL</span> <span style="font-size:0.75rem;color:rgba(248,247,244,0.35);font-family:'DM Sans',sans-serif;font-weight:300"> — </span></div>
-  <div class="footer-text">© 2026 UPSKILL — MVP v2.0 — Maroc</div>
-  <div class="footer-links">
-    <a href="#">Politique de confidentialité</a>
-    <a href="#">Conditions d'utilisation</a>
-    <a href="#">Contact</a>
-  </div>
-</footer>
+      <div class="price-card featured">
+        <div class="price-header">
+          <div class="best-badge">Recommandé</div>
+          <div class="price-tier">PME Starter</div>
+          <div class="price-amount">990<span> MAD/mois</span></div>
+        </div>
+        <div class="price-body">
+          <ul class="price-features">
+            <li><span class="chk">✓</span> Jusqu'à 50 employés</li>
+            <li><span class="chk">✓</span> LMS complet + AI Tutor</li>
+            <li><span class="chk">✓</span> AI CSF Generator (10 dossiers)</li>
+            <li><span class="chk">✓</span> Marketplace access</li>
+            <li><span class="chk">✓</span> Dashboard RH + support email</li>
+          </ul>
+          <a href="#cta" class="price-cta price-cta-fill">Démarrer l'essai gratuit</a>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-header">
+          <div class="price-tier">Enterprise</div>
+          <div class="price-amount">2 490<span> MAD/mois</span></div>
+        </div>
+        <div class="price-body">
+          <ul class="price-features">
+            <li><span class="chk">✓</span> Employés illimités</li>
+            <li><span class="chk">✓</span> Toutes les fonctionnalités IA</li>
+            <li><span class="chk">✓</span> Dossiers CSF illimités</li>
+            <li><span class="chk">✓</span> Intégration SIRH (Paie.ma, Sage)</li>
+            <li><span class="chk">✓</span> Support dédié + onboarding</li>
+          </ul>
+          <a href="#cta" class="price-cta price-cta-outline">Planifier une démo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHITELIST REGISTRATION -->
+  <section class="whitelist-section" style="background:var(--white);padding:5rem 4rem;text-align:center">
+    <div class="centered">
+      <p class="section-eyebrow">Accès en Liste Blanche</p>
+      <h2 class="section-title">Rejoignez la liste d'attente UPSKILL</h2>
+      <p class="section-sub" style="margin:0 auto 2.5rem">Les places sont limitées. Inscrivez-vous maintenant pour un
+        accès prioritaire et 3 mois offerts.</p>
+
+      <form id="whitelist-form" style="max-width:480px;margin:0 auto;text-align:left">
+        <div style="display:grid;gap:1rem">
+          <div>
+            <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--navy)">Nom de
+              l'entreprise *</label>
+            <input type="text" id="company" required placeholder="Ex: SONATROF Industries"
+              style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border-dark);border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s"
+              onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border-dark)'">
+          </div>
+          <div>
+            <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--navy)">Votre
+              nom *</label>
+            <input type="text" id="name" required placeholder="Ex: Ismail Bentour"
+              style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border-dark);border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s"
+              onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border-dark)'">
+          </div>
+          <div>
+            <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--navy)">Email
+              professionnel *</label>
+            <input type="email" id="email" required placeholder="Ismail@sonatrof.ma"
+              style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border-dark);border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s"
+              onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border-dark)'">
+          </div>
+          <div>
+            <label
+              style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--navy)">Téléphone</label>
+            <input type="tel" id="phone" placeholder="06 12 34 56 78"
+              style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border-dark);border-radius:8px;font-size:0.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s"
+              onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border-dark)'">
+          </div>
+          <div id="form-message"
+            style="display:none;padding:0.75rem 1rem;border-radius:8px;font-size:0.85rem;margin-top:0.5rem"></div>
+          <button type="submit"
+            style="width:100%;padding:0.9rem;background:var(--green);color:var(--navy);border:none;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:background 0.2s;margin-top:0.5rem"
+            onmouseover="this.style.background='var(--green-dim)'" onmouseout="this.style.background='var(--green)'">
+            S'inscrire sur la liste blanche →
+          </button>
+          <p style="font-size:0.75rem;color:var(--slate);text-align:center;margin-top:0.75rem">
+            En soumettant, vous acceptez de recevoir des communications UPSKILL. Désabonnement à tout moment.
+          </p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-final" id="cta">
+    <h2>Votre prochain dossier CSF, prêt en 5 minutes.</h2>
+    <p>Sans carte bancaire. Installation en moins de 10 minutes. Annulation à tout moment.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn-primary">Démarrer Gratuitement — Sans carte bancaire →</a>
+      <a href="#" class="btn-secondary">Planifier une Démo</a>
+    </div>
+    <p class="cta-reassure">Support en français et arabe · Données hébergées au Maroc · OFPPT compliant</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">UP<span>SKILL</span> <span
+        style="font-size:0.75rem;color:rgba(248,247,244,0.35);font-family:'DM Sans',sans-serif;font-weight:300"> —
+      </span></div>
+    <div class="footer-text">© 2026 UPSKILL — MVP v2.0 — Maroc</div>
+    <div class="footer-links">
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">Conditions d'utilisation</a>
+      <a href="#">Contact</a>
+    </div>
+  </footer>
 
   <script>
     // Whitelist registration handling
-    (function() {
+    (function () {
       const STORAGE_KEY = 'upskill_whitelist';
 
       function getWhitelist() {
         try {
           const data = localStorage.getItem(STORAGE_KEY);
           return data ? JSON.parse(data) : [];
-        } catch(e) { return []; }
+        } catch (e) { return []; }
       }
 
       function saveToWhitelist(entry) {
@@ -965,7 +1748,7 @@
         return { success: true, message: 'Inscription réussie ! Vous êtes sur la liste blanche.' };
       }
 
-      document.getElementById('whitelist-form').addEventListener('submit', function(e) {
+      document.getElementById('whitelist-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const company = document.getElementById('company').value.trim();
@@ -1001,4 +1784,5 @@
     })();
   </script>
 </body>
+
 </html>
