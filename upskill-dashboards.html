@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPSKILLS — Dashboard Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D1F3C;
+  --navy-mid: #152d54;
+  --navy-light: #1e3f70;
+  --green: #00E676;
+  --green-dim: #00c863;
+  --green-pale: #e8fff5;
+  --white: #F8F7F4;
+  --bg: #f0efe9;
+  --slate: #64748B;
+  --slate-light: #94a3b8;
+  --border: rgba(13,31,60,0.1);
+  --amber: #f59e0b;
+  --amber-pale: #fffbeb;
+  --red: #ef4444;
+  --red-pale: #fff1f1;
+  --blue: #3b82f6;
+  --blue-pale: #eff6ff;
+  --purple: #8b5cf6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--navy); font-size:14px; }
+
+/* ROLE SELECTOR */
+.role-bar {
+  background: var(--navy);
+  padding: 0 0 0 0;
+  display: flex; align-items: stretch;
+  border-bottom: 2px solid rgba(0,230,118,0.2);
+  position: sticky; top: 0; z-index: 200;
+}
+.role-logo {
+  display: flex; align-items: center;
+  padding: 0 1.5rem;
+  font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800;
+  color:var(--white); border-right: 1px solid rgba(255,255,255,0.1);
+  white-space: nowrap;
+}
+.role-logo span { color:var(--green); }
+.role-tabs { display:flex; flex:1; overflow-x:auto; }
+.role-tab {
+  display:flex; align-items:center; gap:0.5rem;
+  padding:0 1.25rem; cursor:pointer;
+  font-size:0.8rem; font-weight:500;
+  color:rgba(248,247,244,0.45);
+  border-bottom:2px solid transparent;
+  white-space:nowrap; transition:all 0.2s;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  min-height: 52px;
+}
+.role-tab:hover { color:rgba(248,247,244,0.8); background:rgba(255,255,255,0.04); }
+.role-tab.active { color:var(--white); border-bottom-color:var(--green); background:rgba(0,230,118,0.06); }
+.role-dot {
+  width:8px; height:8px; border-radius:50%; flex-shrink:0;
+}
+
+/* LAYOUT */
+.app { display:flex; height:calc(100vh - 52px); }
+
+/* SIDEBAR */
+.sidebar {
+  width:220px; flex-shrink:0;
+  background:var(--navy);
+  display:flex; flex-direction:column;
+  overflow-y:auto;
+}
+.sidebar-user {
+  padding:1.25rem 1rem 1rem;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.user-avatar {
+  width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:700;
+  margin-bottom:0.6rem;
+}
+.user-name { font-size:0.82rem; font-weight:600; color:var(--white); }
+.user-role { font-size:0.7rem; color:rgba(248,247,244,0.45); margin-top:0.1rem; }
+.user-company { font-size:0.68rem; color:var(--green); margin-top:0.15rem; }
+.nav-section { padding:1rem 0 0; }
+.nav-label { padding:0.25rem 1rem; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:rgba(248,247,244,0.25); font-weight:600; margin-bottom:0.25rem; }
+.nav-item {
+  display:flex; align-items:center; gap:0.6rem;
+  padding:0.55rem 1rem; cursor:pointer;
+  font-size:0.8rem; color:rgba(248,247,244,0.5);
+  border-left:2px solid transparent;
+  transition:all 0.15s;
+}
+.nav-item:hover { color:rgba(248,247,244,0.85); background:rgba(255,255,255,0.04); }
+.nav-item.active { color:var(--white); border-left-color:var(--green); background:rgba(0,230,118,0.07); }
+.nav-icon { font-size:0.9rem; width:16px; text-align:center; }
+.nav-badge {
+  margin-left:auto; background:var(--green); color:var(--navy);
+  font-size:0.6rem; font-weight:700; padding:0.1rem 0.4rem; border-radius:100px;
+}
+
+/* MAIN */
+.main { flex:1; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; gap:1.25rem; }
+.page { display:none; flex-direction:column; gap:1.25rem; }
+.page.active { display:flex; }
+
+/* TOPBAR */
+.topbar { display:flex; align-items:center; justify-content:space-between; }
+.page-title { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:700; letter-spacing:-0.01em; }
+.page-sub { font-size:0.78rem; color:var(--slate); margin-top:0.15rem; }
+.topbar-actions { display:flex; gap:0.6rem; align-items:center; }
+.btn {
+  padding:0.45rem 1rem; border-radius:6px; font-size:0.8rem; font-weight:600;
+  cursor:pointer; border:none; display:inline-flex; align-items:center; gap:0.4rem;
+  font-family:'DM Sans',sans-serif; transition:all 0.15s;
+}
+.btn-primary { background:var(--green); color:var(--navy); }
+.btn-primary:hover { background:var(--green-dim); }
+.btn-ghost { background:transparent; color:var(--slate); border:1px solid var(--border); }
+.btn-ghost:hover { background:rgba(13,31,60,0.05); }
+
+/* CARDS */
+.card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:1.25rem; }
+.card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+.card-title { font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700; }
+.card-action { font-size:0.75rem; color:var(--green); cursor:pointer; font-weight:500; }
+
+/* METRIC GRID */
+.metric-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.metric-card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.25rem; }
+.metric-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--slate); font-weight:600; margin-bottom:0.5rem; }
+.metric-value { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; letter-spacing:-0.02em; line-height:1; }
+.metric-delta { font-size:0.72rem; margin-top:0.35rem; display:flex; align-items:center; gap:0.3rem; }
+.delta-up { color:#16a34a; }
+.delta-down { color:var(--red); }
+.delta-neutral { color:var(--slate); }
+
+/* BADGE */
+.badge {
+  display:inline-flex; align-items:center; gap:0.3rem;
+  padding:0.2rem 0.6rem; border-radius:100px;
+  font-size:0.68rem; font-weight:600;
+}
+.badge-green { background:var(--green-pale); color:#065f46; }
+.badge-amber { background:var(--amber-pale); color:#92400e; }
+.badge-red { background:var(--red-pale); color:#991b1b; }
+.badge-blue { background:var(--blue-pale); color:#1e40af; }
+.badge-gray { background:#f1efea; color:var(--slate); }
+.badge-navy { background:rgba(13,31,60,0.08); color:var(--navy); }
+
+/* TABLE */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+th { text-align:left; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--slate); font-weight:600; padding:0.5rem 0.75rem; border-bottom:1px solid var(--border); }
+td { padding:0.65rem 0.75rem; font-size:0.8rem; border-bottom:1px solid rgba(13,31,60,0.05); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(13,31,60,0.02); }
+
+/* PROGRESS BAR */
+.pbar { height:6px; background:#e9e8e2; border-radius:3px; overflow:hidden; }
+.pbar-fill { height:100%; border-radius:3px; transition:width 0.8s ease; }
+
+/* SCORE RING */
+.score-ring-sm {
+  width:56px; height:56px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Syne',sans-serif; font-size:0.9rem; font-weight:800;
+  position:relative;
+}
+.score-ring-sm::before { content:''; position:absolute; inset:5px; border-radius:50%; background:var(--white); z-index:1; }
+.score-ring-sm span { position:relative; z-index:2; }
+
+/* KANBAN */
+.kanban { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.kanban-col { background:#f4f3ef; border-radius:10px; padding:0.75rem; }
+.kanban-col-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem; }
+.kanban-card { background:var(--white); border:1px solid var(--border); border-radius:8px; padding:0.875rem; margin-bottom:0.6rem; cursor:pointer; transition:all 0.15s; }
+.kanban-card:hover { box-shadow:0 2px 8px rgba(13,31,60,0.1); transform:translateY(-1px); }
+.kc-title { font-size:0.78rem; font-weight:600; margin-bottom:0.4rem; }
+.kc-meta { font-size:0.7rem; color:var(--slate); display:flex; gap:0.75rem; }
+.kc-amount { font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700; margin-top:0.35rem; }
+
+/* GRID 2 */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; }
+
+/* CHAT */
+.chat-wrap { display:flex; flex-direction:column; gap:0.75rem; max-height:320px; overflow-y:auto; padding:0.25rem 0; }
+.chat-msg { display:flex; gap:0.6rem; max-width:85%; }
+.chat-msg.ai { align-self:flex-start; }
+.chat-msg.user { align-self:flex-end; flex-direction:row-reverse; }
+.chat-bubble {
+  padding:0.65rem 0.9rem; border-radius:12px; font-size:0.8rem; line-height:1.6;
+}
+.chat-msg.ai .chat-bubble { background:#f0efe9; border:1px solid var(--border); border-top-left-radius:4px; }
+.chat-msg.user .chat-bubble { background:var(--navy); color:var(--white); border-top-right-radius:4px; }
+.chat-avatar { width:28px; height:28px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:700; margin-top:2px; }
+.chat-input-row { display:flex; gap:0.5rem; margin-top:0.75rem; border-top:1px solid var(--border); padding-top:0.75rem; }
+.chat-input {
+  flex:1; padding:0.5rem 0.75rem; border:1px solid var(--border);
+  border-radius:8px; font-size:0.8rem; font-family:'DM Sans',sans-serif;
+  background:var(--white); color:var(--navy); outline:none;
+}
+.chat-input:focus { border-color:rgba(0,230,118,0.5); }
+
+/* COURSE CARD */
+.course-card {
+  background:var(--white); border:1px solid var(--border); border-radius:12px;
+  padding:1.25rem; display:flex; flex-direction:column; gap:0.75rem;
+  cursor:pointer; transition:all 0.2s;
+}
+.course-card:hover { box-shadow:0 4px 16px rgba(13,31,60,0.1); transform:translateY(-2px); }
+.cc-top { display:flex; align-items:flex-start; justify-content:space-between; gap:0.5rem; }
+.cc-title { font-family:'Syne',sans-serif; font-size:0.9rem; font-weight:700; }
+.cc-provider { font-size:0.72rem; color:var(--slate); }
+.cc-meta { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.cc-stat { display:flex; align-items:center; gap:0.3rem; font-size:0.72rem; color:var(--slate); }
+.cc-price { display:flex; align-items:center; justify-content:space-between; padding-top:0.5rem; border-top:1px solid var(--border); }
+.cc-amount { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; }
+.cc-reimb { font-size:0.72rem; color:#065f46; background:var(--green-pale); padding:0.2rem 0.6rem; border-radius:100px; font-weight:600; }
+
+/* CHECKLIST */
+.checklist { display:flex; flex-direction:column; gap:0.5rem; }
+.cl-item { display:flex; align-items:center; gap:0.75rem; padding:0.5rem 0; border-bottom:1px solid rgba(13,31,60,0.05); }
+.cl-item:last-child { border-bottom:none; }
+.cl-icon { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.65rem; flex-shrink:0; }
+.cl-check { background:var(--green-pale); color:#065f46; }
+.cl-warn { background:var(--amber-pale); color:#92400e; }
+.cl-x { background:var(--red-pale); color:#991b1b; }
+.cl-text { font-size:0.8rem; flex:1; }
+.cl-sub { font-size:0.7rem; color:var(--slate); }
+
+/* ALERT */
+.alert { display:flex; align-items:flex-start; gap:0.6rem; padding:0.75rem 1rem; border-radius:8px; font-size:0.8rem; }
+.alert-warning { background:var(--amber-pale); border:1px solid rgba(245,158,11,0.25); color:#92400e; }
+.alert-success { background:var(--green-pale); border:1px solid rgba(0,230,118,0.25); color:#065f46; }
+.alert-info { background:var(--blue-pale); border:1px solid rgba(59,130,246,0.25); color:#1e40af; }
+
+/* MINI CHART */
+.bar-chart { display:flex; align-items:flex-end; gap:0.4rem; height:80px; }
+.bar-chart-bar { flex:1; border-radius:4px 4px 0 0; min-width:20px; transition:height 0.5s ease; position:relative; cursor:pointer; }
+.bar-chart-bar:hover { opacity:0.8; }
+
+/* SCORE COMPONENTS */
+.score-comp { display:flex; align-items:center; gap:0.75rem; padding:0.4rem 0; }
+.sc-icon { width:20px; text-align:center; font-size:0.9rem; }
+.sc-name { flex:1; font-size:0.78rem; }
+.sc-bar { width:80px; height:5px; background:#e9e8e2; border-radius:3px; overflow:hidden; }
+.sc-fill { height:100%; border-radius:3px; }
+.sc-score { font-size:0.72rem; font-weight:600; min-width:32px; text-align:right; }
+
+/* MODULE PROGRESS */
+.mod-row { display:flex; align-items:center; gap:0.75rem; padding:0.5rem 0; border-bottom:1px solid rgba(13,31,60,0.05); }
+.mod-row:last-child { border-bottom:none; }
+.mod-num { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:700; flex-shrink:0; }
+.mod-info { flex:1; }
+.mod-title { font-size:0.78rem; font-weight:500; }
+.mod-meta { font-size:0.68rem; color:var(--slate); }
+.mod-status { flex-shrink:0; }
+
+/* DELEGATION CARD */
+.del-card {
+  background:var(--white); border:1px solid var(--border); border-radius:10px;
+  padding:1rem 1.1rem;
+}
+.del-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; }
+.del-name { font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700; }
+.del-row { display:flex; gap:0.4rem; align-items:center; font-size:0.75rem; color:var(--slate); margin-bottom:0.3rem; }
+.del-note { font-size:0.72rem; color:var(--slate); background:#f4f3ef; padding:0.5rem 0.6rem; border-radius:6px; margin-top:0.6rem; line-height:1.5; }
+
+/* TABS */
+.tab-row { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:1rem; }
+.tab-btn { padding:0.5rem 1rem; font-size:0.78rem; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; color:var(--slate); background:none; border-top:none; border-left:none; border-right:none; transition:all 0.15s; }
+.tab-btn.active { color:var(--navy); border-bottom-color:var(--green); font-weight:600; }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+/* PROVIDER STATS */
+.prov-stat { display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid rgba(13,31,60,0.05); }
+.prov-stat:last-child { border-bottom:none; }
+.prov-st-label { font-size:0.78rem; color:var(--slate); }
+.prov-st-val { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; }
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+  .metric-grid { grid-template-columns:repeat(2,1fr); }
+  .kanban { grid-template-columns:repeat(2,1fr); }
+  .grid-2 { grid-template-columns:1fr; }
+  .sidebar { width:180px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ROLE BAR -->
+<div class="role-bar">
+  <div class="role-logo">UP<span>SKILL</span></div>
+  <div class="role-tabs">
+    <div class="role-tab active" onclick="switchRole('hr')" id="tab-hr">
+      <div class="role-dot" style="background:#00E676"></div>
+      DRH · Ismail Bentour    </div>
+    <div class="role-tab" onclick="switchRole('employee')" id="tab-employee">
+      <div class="role-dot" style="background:#3b82f6"></div>
+      Apprenant · Zackaria Bessado
+    </div>
+    <div class="role-tab" onclick="switchRole('provider')" id="tab-provider">
+      <div class="role-dot" style="background:#8b5cf6"></div>
+      Formateur · Hicham Elkebdani
+    </div>
+    <div class="role-tab" onclick="switchRole('coop')" id="tab-coop">
+      <div class="role-dot" style="background:#f59e0b"></div>
+      Coopérative · Mohammed Said Rahmani
+    </div>
+    <div class="role-tab" onclick="switchRole('admin')" id="tab-admin">
+      <div class="role-dot" style="background:#ef4444"></div>
+      Admin UPSKILLS
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+<!-- ===================== HR SIDEBAR ===================== -->
+<div class="sidebar" id="sidebar-hr">
+  <div class="sidebar-user">
+    <div class="user-avatar" style="background:rgba(0,230,118,0.15);color:#00E676">NE</div>
+    <div class="user-name">Nisrine El Fassi</div>
+    <div class="user-role">DRH · Enterprise</div>
+    <div class="user-company">SONATROF Industries</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Principal</div>
+    <div class="nav-item active" onclick="showPage('hr','overview')"><span class="nav-icon">📊</span>Vue d'ensemble</div>
+    <div class="nav-item" onclick="showPage('hr','csf')"><span class="nav-icon">📁</span>Dossiers CSF <span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="showPage('hr','tracker')"><span class="nav-icon">🔄</span>Suivi remboursements</div>
+    <div class="nav-item" onclick="showPage('hr','marketplace')"><span class="nav-icon">🏪</span>Marketplace</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Équipe</div>
+    <div class="nav-item" onclick="showPage('hr','employees')"><span class="nav-icon">👥</span>Employés</div>
+    <div class="nav-item" onclick="showPage('hr','readiness')"><span class="nav-icon">🎯</span>Score CSF</div>
+    <div class="nav-item" onclick="showPage('hr','delegation')"><span class="nav-icon">🏛</span>Délégation OFPPT</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">IA</div>
+    <div class="nav-item" onclick="showPage('hr','aiassistant')"><span class="nav-icon">🤖</span>Assistant RH IA</div>
+  </div>
+</div>
+
+<!-- ===================== EMPLOYEE SIDEBAR ===================== -->
+<div class="sidebar" id="sidebar-employee" style="display:none">
+  <div class="sidebar-user">
+    <div class="user-avatar" style="background:rgba(59,130,246,0.15);color:#3b82f6">KB</div>
+    <div class="user-name">Zackaria Bessado</div>
+    <div class="user-role">Technicien Maintenance</div>
+    <div class="user-company">SONATROF Industries</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Formation</div>
+    <div class="nav-item active" onclick="showPage('employee','mylearning')"><span class="nav-icon">📚</span>Mes formations</div>
+    <div class="nav-item" onclick="showPage('employee','course')"><span class="nav-icon">▶️</span>Cours en cours</div>
+    <div class="nav-item" onclick="showPage('employee','certificates')"><span class="nav-icon">🏆</span>Certificats</div>
+    <div class="nav-item" onclick="showPage('employee','aitutor')"><span class="nav-icon">🤖</span>Tuteur IA</div>
+  </div>
+</div>
+
+<!-- ===================== PROVIDER SIDEBAR ===================== -->
+<div class="sidebar" id="sidebar-provider" style="display:none">
+  <div class="sidebar-user">
+    <div class="user-avatar" style="background:rgba(139,92,246,0.15);color:#8b5cf6">SC</div>
+    <div class="user-name">Hicham Elkebdani</div>
+    <div class="user-role">Directrice Formation</div>
+    <div class="user-company">ACTIF Formation Centre</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Mes cours</div>
+    <div class="nav-item active" onclick="showPage('provider','provoverview')"><span class="nav-icon">📊</span>Tableau de bord</div>
+    <div class="nav-item" onclick="showPage('provider','courses')"><span class="nav-icon">📖</span>Catalogue cours</div>
+    <div class="nav-item" onclick="showPage('provider','builder')"><span class="nav-icon">✨</span>AI Course Builder</div>
+    <div class="nav-item" onclick="showPage('provider','revenue')"><span class="nav-icon">💰</span>Revenus</div>
+  </div>
+</div>
+
+<!-- ===================== COOP SIDEBAR ===================== -->
+<div class="sidebar" id="sidebar-coop" style="display:none">
+  <div class="sidebar-user">
+    <div class="user-avatar" style="background:rgba(245,158,11,0.15);color:#f59e0b">HA</div>
+    <div class="user-name">Mohammed Said Rahmani</div>
+    <div class="user-role">Président</div>
+    <div class="user-company">Coopérative Al Baraka</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Coopérative</div>
+    <div class="nav-item active" onclick="showPage('coop','coopoverview')"><span class="nav-icon">🌱</span>Vue d'ensemble</div>
+    <div class="nav-item" onclick="showPage('coop','members')"><span class="nav-icon">👨‍🌾</span>Membres (45)</div>
+    <div class="nav-item" onclick="showPage('coop','sponsor')"><span class="nav-icon">🤝</span>Sponsor CSR (OCP)</div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN SIDEBAR ===================== -->
+<div class="sidebar" id="sidebar-admin" style="display:none">
+  <div class="sidebar-user">
+    <div class="user-avatar" style="background:rgba(239,68,68,0.15);color:#ef4444">AD</div>
+    <div class="user-name">Admin UPSKILLS</div>
+    <div class="user-role">Super Admin</div>
+    <div class="user-company">UPSKILLS Platform</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Plateforme</div>
+    <div class="nav-item active" onclick="showPage('admin','adminoverview')"><span class="nav-icon">📈</span>KPIs Plateforme</div>
+    <div class="nav-item" onclick="showPage('admin','companies')"><span class="nav-icon">🏢</span>Entreprises (4)</div>
+    <div class="nav-item" onclick="showPage('admin','rejection')"><span class="nav-icon">🔍</span>AI Rejection Analyzer</div>
+  </div>
+</div>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<div class="main">
+
+<!-- ===== HR: OVERVIEW ===== -->
+<div class="page active" id="page-hr-overview">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Bonjour, Nisrine 👋</div>
+      <div class="page-sub">SONATROF Industries · Tanger · Exercice 2026</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost">📥 Importer CSV</button>
+      <button class="btn btn-primary">✨ Générer dossier CSF</button>
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    <span>✓</span>
+    <span>Votre score CSF est à <strong>95%</strong> — votre dossier HSE est prêt à être soumis à la délégation OFPPT Tanger.</span>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">CFF Disponible</div>
+      <div class="metric-value" style="color:var(--green)">24 800</div>
+      <div class="metric-delta"><span>MAD · Exercice 2026</span></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Remboursé YTD</div>
+      <div class="metric-value">18 400</div>
+      <div class="metric-delta delta-up">↑ +6 200 MAD vs 2025</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Employés formés</div>
+      <div class="metric-value">87</div>
+      <div class="metric-delta delta-neutral">/ 148 total · 59%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Dossiers actifs</div>
+      <div class="metric-value">3</div>
+      <div class="metric-delta"><span class="badge badge-amber">1 en attente</span></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Formations en cours</div>
+        <div class="card-action" onclick="showPage('hr','employees')">Voir tout →</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem">
+            <span style="font-size:0.8rem;font-weight:500">Sécurité Industrielle HSE</span>
+            <span style="font-size:0.78rem;color:var(--slate)">87% · 12 emp.</span>
+          </div>
+          <div class="pbar"><div class="pbar-fill" style="width:87%;background:var(--green)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem">
+            <span style="font-size:0.8rem;font-weight:500">Excel Avancé Finance</span>
+            <span style="font-size:0.78rem;color:var(--slate)">64% · 8 emp.</span>
+          </div>
+          <div class="pbar"><div class="pbar-fill" style="width:64%;background:#3b82f6"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem">
+            <span style="font-size:0.8rem;font-weight:500">IA pour le Business</span>
+            <span style="font-size:0.78rem;color:var(--slate)">40% · 5 emp.</span>
+          </div>
+          <div class="pbar"><div class="pbar-fill" style="width:40%;background:#8b5cf6"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem">
+            <span style="font-size:0.8rem;font-weight:500">Excellence Client</span>
+            <span style="font-size:0.78rem;color:var(--slate)">22% · 15 emp.</span>
+          </div>
+          <div class="pbar"><div class="pbar-fill" style="width:22%;background:var(--amber)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Score de Préparation CSF</div>
+        <span class="badge badge-green">95% · Prêt ✓</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <div class="score-ring-sm" style="background:conic-gradient(#00E676 0% 95%, #e9e8e2 95% 100%)">
+          <span>95%</span>
+        </div>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:#065f46">Prêt CSF ✓</div>
+          <div style="font-size:0.72rem;color:var(--slate);margin-top:0.1rem">Générez votre dossier maintenant</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.3rem">
+        <div class="score-comp"><span class="sc-icon">✓</span><span class="sc-name">Identité entreprise</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">20/20</span></div>
+        <div class="score-comp"><span class="sc-icon">✓</span><span class="sc-name">Masse salariale</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">15/15</span></div>
+        <div class="score-comp"><span class="sc-icon">✓</span><span class="sc-name">Employés importés</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">15/15</span></div>
+        <div class="score-comp"><span class="sc-icon">✓</span><span class="sc-name">Formation sélectionnée</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">20/20</span></div>
+        <div class="score-comp"><span class="sc-icon">✓</span><span class="sc-name">Attestation CNSS</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">15/15</span></div>
+        <div class="score-comp"><span class="sc-icon">~</span><span class="sc-name">Dossier CSF actif</span><div class="sc-bar"><div class="sc-fill" style="width:67%;background:var(--amber)"></div></div><span class="sc-score" style="color:#92400e">10/15</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HR: CSF DOSSIERS ===== -->
+<div class="page" id="page-hr-csf">
+  <div class="topbar">
+    <div><div class="page-title">Dossiers CSF</div><div class="page-sub">Gestion et génération automatique · SONATROF Industries</div></div>
+    <button class="btn btn-primary">✨ Nouveau dossier CSF</button>
+  </div>
+  <div class="card">
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab(this,'csf')">Tous (3)</button>
+      <button class="tab-btn" onclick="switchTab(this,'csf')">En cours (1)</button>
+      <button class="tab-btn" onclick="switchTab(this,'csf')">Soumis (1)</button>
+      <button class="tab-btn" onclick="switchTab(this,'csf')">Remboursé (1)</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Formation</th><th>Employés</th><th>Montant demandé</th><th>Délégation</th><th>Statut</th><th>Jours</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div style="font-weight:600">Sécurité Industrielle HSE</div><div style="font-size:0.7rem;color:var(--slate)">CSF-DOC-001 · Déc 2025</div></td>
+            <td>12</td>
+            <td style="font-family:'Syne',sans-serif;font-weight:700">50 400 MAD</td>
+            <td>Tanger</td>
+            <td><span class="badge badge-blue">Soumis</span></td>
+            <td style="color:var(--slate)">D+8</td>
+            <td><button class="btn btn-ghost" style="padding:0.3rem 0.6rem;font-size:0.72rem">Voir</button></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600">Excel Avancé Finance</div><div style="font-size:0.7rem;color:var(--slate)">CSF-DOC-002 · En cours</div></td>
+            <td>8</td>
+            <td style="font-family:'Syne',sans-serif;font-weight:700">30 400 MAD</td>
+            <td>Tanger</td>
+            <td><span class="badge badge-amber">En préparation</span></td>
+            <td style="color:var(--slate)">—</td>
+            <td><button class="btn btn-primary" style="padding:0.3rem 0.6rem;font-size:0.72rem">Générer</button></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600">Excellence Client</div><div style="font-size:0.7rem;color:var(--slate)">CSF-DOC-000 · 2025</div></td>
+            <td>15</td>
+            <td style="font-family:'Syne',sans-serif;font-weight:700">23 200 MAD</td>
+            <td>Tanger</td>
+            <td><span class="badge badge-green">Remboursé ✓</span></td>
+            <td style="color:#065f46">D+38</td>
+            <td><button class="btn btn-ghost" style="padding:0.3rem 0.6rem;font-size:0.72rem">Reçu</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Checklist de conformité — CSF-DOC-001 (HSE)</div><span class="badge badge-green">Conforme OFPPT ✓</span></div>
+    <div class="checklist">
+      <div class="cl-item"><div class="cl-icon cl-check">✓</div><div><div class="cl-text">Programme pédagogique OFPPT</div><div class="cl-sub">Format conforme circulaire OFPPT 2024 · 4 modules · 28h</div></div></div>
+      <div class="cl-item"><div class="cl-icon cl-check">✓</div><div><div class="cl-text">Organisme de formation agréé</div><div class="cl-sub">ACTIF Formation · Agrément OFPPT-2022-1456 · Valide</div></div></div>
+      <div class="cl-item"><div class="cl-icon cl-check">✓</div><div><div class="cl-text">Liste des bénéficiaires CNSS</div><div class="cl-sub">12 employés · CIN vérifiés · Salariés déclarés CNSS</div></div></div>
+      <div class="cl-item"><div class="cl-icon cl-check">✓</div><div><div class="cl-text">Budget prévisionnel éligible</div><div class="cl-sub">Coûts OFPPT-approuvés uniquement · Transport exclu · Total 50 400 MAD</div></div></div>
+      <div class="cl-item"><div class="cl-icon cl-warn">!</div><div><div class="cl-text">Signature convention</div><div class="cl-sub">Cachet humide requis — délégation Tanger exige signature manuscrite</div></div></div>
+      <div class="cl-item"><div class="cl-icon cl-check">✓</div><div><div class="cl-text">Délai de soumission</div><div class="cl-sub">22 jours restants avant clôture exercice CSF 2026</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HR: TRACKER ===== -->
+<div class="page" id="page-hr-tracker">
+  <div class="topbar">
+    <div><div class="page-title">Suivi des Remboursements</div><div class="page-sub">Kanban de cycle de vie · SONATROF Industries</div></div>
+  </div>
+  <div class="metric-grid">
+    <div class="metric-card"><div class="metric-label">Total demandé 2026</div><div class="metric-value">104 000</div><div class="metric-delta delta-neutral">MAD · 3 dossiers</div></div>
+    <div class="metric-card"><div class="metric-label">Approuvé & reçu</div><div class="metric-value" style="color:var(--green)">23 200</div><div class="metric-delta delta-up">↑ Excellence Client 2025</div></div>
+    <div class="metric-card"><div class="metric-label">En cours OFPPT</div><div class="metric-value" style="color:#3b82f6">50 400</div><div class="metric-delta delta-neutral">D+8 depuis soumission</div></div>
+    <div class="metric-card"><div class="metric-label">À soumettre</div><div class="metric-value" style="color:var(--amber)">30 400</div><div class="metric-delta delta-neutral">Excel Finance — brouillon</div></div>
+  </div>
+  <div class="kanban">
+    <div class="kanban-col">
+      <div class="kanban-col-title"><span class="badge badge-amber" style="font-size:0.65rem">1</span>Préparation</div>
+      <div class="kanban-card">
+        <div class="kc-title">Excel Avancé Finance</div>
+        <div class="kc-meta"><span>8 emp.</span><span>Tanger</span></div>
+        <div class="kc-amount" style="color:var(--amber)">30 400 MAD</div>
+        <div style="margin-top:0.5rem"><button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem;width:100%">Générer dossier →</button></div>
+      </div>
+    </div>
+    <div class="kanban-col">
+      <div class="kanban-col-title"><span class="badge badge-blue" style="font-size:0.65rem">1</span>Soumis</div>
+      <div class="kanban-card">
+        <div class="kc-title">Sécurité HSE</div>
+        <div class="kc-meta"><span>12 emp.</span><span>Tanger · D+8</span></div>
+        <div class="kc-amount" style="color:#3b82f6">50 400 MAD</div>
+        <div style="margin-top:0.35rem"><span class="badge badge-blue" style="font-size:0.65rem">En traitement OFPPT</span></div>
+      </div>
+    </div>
+    <div class="kanban-col">
+      <div class="kanban-col-title"><span class="badge badge-gray" style="font-size:0.65rem">0</span>Approuvé</div>
+      <div style="font-size:0.75rem;color:var(--slate);text-align:center;padding:1.5rem 0">Aucun dossier ici</div>
+    </div>
+    <div class="kanban-col">
+      <div class="kanban-col-title"><span class="badge badge-green" style="font-size:0.65rem">1</span>Remboursé ✓</div>
+      <div class="kanban-card">
+        <div class="kc-title">Excellence Client</div>
+        <div class="kc-meta"><span>15 emp.</span><span>Reçu 15/05/2025</span></div>
+        <div class="kc-amount" style="color:#065f46">23 200 MAD ✓</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HR: MARKETPLACE ===== -->
+<div class="page" id="page-hr-marketplace">
+  <div class="topbar">
+    <div><div class="page-title">Marketplace CSF</div><div class="page-sub">CFF disponible: 24 800 MAD · Formations pré-validées OFPPT</div></div>
+    <input type="text" placeholder="🔍 Rechercher une formation…" style="padding:0.45rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.8rem;width:220px;font-family:'DM Sans',sans-serif;outline:none">
+  </div>
+  <div class="grid-2">
+    <div class="course-card">
+      <div class="cc-top">
+        <div><div class="cc-title">Intelligence Artificielle pour le Business</div><div class="cc-provider">ACTIF Formation · Agrément OFPPT-2022-1456</div></div>
+        <span class="badge badge-green">CSF ✓</span>
+      </div>
+      <div class="cc-meta">
+        <span class="badge badge-navy">14h · 2 jours</span>
+        <span class="badge badge-navy">E-learning</span>
+        <span class="badge badge-navy">Débutant</span>
+        <span>⭐ 4.9 (412 inscrits)</span>
+      </div>
+      <div class="cc-price">
+        <div class="cc-amount">5 500 MAD</div>
+        <div class="cc-reimb">Remboursable: 5 500 MAD</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center">Inscrire mes employés →</button>
+    </div>
+    <div class="course-card">
+      <div class="cc-top">
+        <div><div class="cc-title">Sécurité Industrielle & HSE</div><div class="cc-provider">ACTIF Formation · Agrément OFPPT-2022-1456</div></div>
+        <span class="badge badge-green">CSF ✓</span>
+      </div>
+      <div class="cc-meta">
+        <span class="badge badge-navy">28h · 4 jours</span>
+        <span class="badge badge-navy">Présentiel</span>
+        <span class="badge badge-navy">Tous niveaux</span>
+        <span>⭐ 4.8 (567 inscrits)</span>
+      </div>
+      <div class="cc-price">
+        <div class="cc-amount">4 200 MAD</div>
+        <div class="cc-reimb">Remboursable: 4 200 MAD</div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center">En cours · Voir progression</button>
+    </div>
+    <div class="course-card">
+      <div class="cc-top">
+        <div><div class="cc-title">Excel Avancé pour la Finance</div><div class="cc-provider">ACTIF Formation · Agrément OFPPT-2022-1456</div></div>
+        <span class="badge badge-green">CSF ✓</span>
+      </div>
+      <div class="cc-meta">
+        <span class="badge badge-navy">21h · 3 jours</span>
+        <span class="badge badge-navy">Présentiel + E-learning</span>
+        <span>⭐ 4.7 (234 inscrits)</span>
+      </div>
+      <div class="cc-price">
+        <div class="cc-amount">3 800 MAD</div>
+        <div class="cc-reimb">Remboursable: 3 800 MAD</div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center">En cours · Voir progression</button>
+    </div>
+    <div class="course-card">
+      <div class="cc-top">
+        <div><div class="cc-title">Excellence Client & Service</div><div class="cc-provider">ACTIF Formation</div></div>
+        <span class="badge badge-green">CSF ✓</span>
+      </div>
+      <div class="cc-meta">
+        <span class="badge badge-navy">14h · 2 jours</span>
+        <span class="badge badge-navy">Français + Darija</span>
+        <span>⭐ 4.6 (789 inscrits)</span>
+      </div>
+      <div class="cc-price">
+        <div class="cc-amount">2 900 MAD</div>
+        <div class="cc-reimb">Remboursable: 2 900 MAD</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center">Inscrire mes employés →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HR: EMPLOYEES ===== -->
+<div class="page" id="page-hr-employees">
+  <div class="topbar">
+    <div><div class="page-title">Employés & Formations</div><div class="page-sub">148 employés · 87 en formation active</div></div>
+    <button class="btn btn-ghost">📤 Exporter CSV</button>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Employé</th><th>Poste</th><th>Formation active</th><th>Progression</th><th>Score dernier quiz</th><th>Certifié</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div style="font-weight:600">Zackaria Bessado</div><div style="font-size:0.68rem;color:var(--slate)">CIN: TK123456</div></td>
+            <td>Technicien Maintenance</td>
+            <td>Sécurité HSE</td>
+            <td><div style="display:flex;align-items:center;gap:0.5rem"><div class="pbar" style="flex:1"><div class="pbar-fill" style="width:64%;background:var(--green)"></div></div><span style="font-size:0.72rem">64%</span></div></td>
+            <td><span class="badge badge-green">88%</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600">Fatima Zahra Moukrim</div><div style="font-size:0.68rem;color:var(--slate)">CIN: AB789012</div></td>
+            <td>Responsable Qualité</td>
+            <td>Excel Avancé</td>
+            <td><div style="display:flex;align-items:center;gap:0.5rem"><div class="pbar" style="flex:1"><div class="pbar-fill" style="width:87%;background:var(--green)"></div></div><span style="font-size:0.72rem">87%</span></div></td>
+            <td><span class="badge badge-green">92%</span></td>
+            <td><span class="badge badge-green">✓</span></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600">Omar Belkadi</div><div style="font-size:0.68rem;color:var(--slate)">CIN: MA334455</div></td>
+            <td>Chef d'Atelier</td>
+            <td>Sécurité HSE</td>
+            <td><div style="display:flex;align-items:center;gap:0.5rem"><div class="pbar" style="flex:1"><div class="pbar-fill" style="width:40%;background:var(--amber)"></div></div><span style="font-size:0.72rem">40%</span></div></td>
+            <td><span class="badge badge-amber">58%</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600">Sara Tazi</div><div style="font-size:0.68rem;color:var(--slate)">CIN: BE667788</div></td>
+            <td>Assistante RH</td>
+            <td>IA pour Business</td>
+            <td><div style="display:flex;align-items:center;gap:0.5rem"><div class="pbar" style="flex:1"><div class="pbar-fill" style="width:22%;background:#8b5cf6"></div></div><span style="font-size:0.72rem">22%</span></div></td>
+            <td><span class="badge badge-gray">—</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HR: DELEGATION ===== -->
+<div class="page" id="page-hr-delegation">
+  <div class="topbar">
+    <div><div class="page-title">Délégation OFPPT Tanger</div><div class="page-sub">Votre délégation de rattachement · Tanger-Tétouan-Al Hoceima</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="del-card">
+      <div class="del-header"><div class="del-name">Délégation OFPPT Tanger</div><span class="badge badge-green">91% approbation</span></div>
+      <div class="del-row">📍 Route de Rabat, Km 3, Tanger 90000</div>
+      <div class="del-row">📞 0539-322211</div>
+      <div class="del-row">✉️ csf.tanger@ofppt.ma</div>
+      <div class="del-row">👤 Mme. Houda Kabbaj (Responsable CFF)</div>
+      <div class="del-row">🕐 Lun–Jeu 08h–15h · Ven 08h–12h</div>
+      <div class="del-row">📋 3 exemplaires papier requis · 38 jours traitement moy.</div>
+      <div class="del-note">💡 UPSKILLS génère automatiquement 3 copies pour les entreprises rattachées à Tanger. Vérifiez les feuilles de présence bilingues (fr+ar).</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Exigences locales spécifiques</div></div>
+      <div class="checklist">
+        <div class="cl-item"><div class="cl-icon cl-warn">!</div><div><div class="cl-text">3 exemplaires papier originaux</div><div class="cl-sub">UPSKILLS génère automatiquement les 3 copies</div></div></div>
+        <div class="cl-item"><div class="cl-icon cl-warn">!</div><div><div class="cl-text">Feuilles de présence bilingues</div><div class="cl-sub">Français ET arabe obligatoire sur chaque feuille</div></div></div>
+        <div class="cl-item"><div class="cl-icon cl-warn">!</div><div><div class="cl-text">Signature manuscrite sur présences</div><div class="cl-sub">Signature numérique non acceptée à Tanger</div></div></div>
+        <div class="cl-item"><div class="cl-icon cl-x">✕</div><div><div class="cl-text">Rejet fréquent: feuilles non-bilingues</div><div class="cl-sub">Cause n°1 de rejet à cette délégation</div></div></div>
+        <div class="cl-item"><div class="cl-icon cl-x">✕</div><div><div class="cl-text">Rejet fréquent: organisme non inscrit registre régional</div><div class="cl-sub">Vérification faite automatiquement par UPSKILLS</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HR: AI ASSISTANT ===== -->
+<div class="page" id="page-hr-aiassistant">
+  <div class="topbar"><div><div class="page-title">Assistant RH IA</div><div class="page-sub">Conseiller CSF expert · Disponible 24h/24</div></div></div>
+  <div class="card" style="flex:1">
+    <div class="chat-wrap" id="hr-chat">
+      <div class="chat-msg ai">
+        <div class="chat-avatar" style="background:rgba(0,230,118,0.15);color:var(--green)">AI</div>
+        <div class="chat-bubble">Bonjour Nisrine ! Votre score CSF est à 95% 🎉<br><br>Voici vos 3 actions prioritaires :<br>1. Apposer le cachet humide sur la convention HSE avant soumission<br>2. Générer le dossier Excel Avancé (8 employés prêts, 30 400 MAD récupérables)<br>3. Inscrire 5 employés à la formation IA Business (5 500 MAD remboursable)</div>
+      </div>
+      <div class="chat-msg user">
+        <div class="chat-avatar" style="background:rgba(13,31,60,0.15);color:var(--navy)">NE</div>
+        <div class="chat-bubble">Quel est mon CFF restant si je génère le dossier Excel maintenant ?</div>
+      </div>
+      <div class="chat-msg ai">
+        <div class="chat-avatar" style="background:rgba(0,230,118,0.15);color:var(--green)">AI</div>
+        <div class="chat-bubble">CFF disponible 2026 : <strong>24 800 MAD</strong><br>Dossier Excel Avancé : <strong>- 30 400 MAD</strong> (8 employés × 3 800 MAD)<br><br>⚠️ Le dossier Excel dépasse votre CFF de 5 600 MAD. Je vous recommande de sélectionner 6 bénéficiaires au lieu de 8 pour rester dans le plafond. Voulez-vous que je recalcule automatiquement ?</div>
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="hr-chat-input" placeholder="Posez votre question CSF en français ou العربية…" onkeydown="if(event.key==='Enter')sendHrChat()">
+      <button class="btn btn-primary" onclick="sendHrChat()">Envoyer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HR: READINESS ===== -->
+<div class="page" id="page-hr-readiness">
+  <div class="topbar"><div><div class="page-title">Score de Préparation CSF</div><div class="page-sub">Indicateur de santé en temps réel · SONATROF Industries</div></div></div>
+  <div class="grid-2">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem">
+        <div class="score-ring-sm" style="width:80px;height:80px;background:conic-gradient(#00E676 0% 95%, #e9e8e2 95% 100%);font-size:1.2rem">
+          <span>95%</span>
+        </div>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#065f46">Prêt CSF ✓</div>
+          <div style="font-size:0.78rem;color:var(--slate);margin-top:0.2rem">Dernière mise à jour: aujourd'hui 09:15</div>
+          <div style="margin-top:0.5rem"><button class="btn btn-primary" style="font-size:0.78rem">Générer mon dossier →</button></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.4rem">
+        <div class="score-comp"><span class="sc-icon" style="color:#065f46">✓</span><span class="sc-name">Identité entreprise (ICE, CNSS, délégation)</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">20/20</span></div>
+        <div class="score-comp"><span class="sc-icon" style="color:#065f46">✓</span><span class="sc-name">Masse salariale & CFF calculé</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">15/15</span></div>
+        <div class="score-comp"><span class="sc-icon" style="color:#065f46">✓</span><span class="sc-name">148 employés importés (CIN + poste)</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">15/15</span></div>
+        <div class="score-comp"><span class="sc-icon" style="color:#065f46">✓</span><span class="sc-name">Formation CSF-éligible sélectionnée</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">20/20</span></div>
+        <div class="score-comp"><span class="sc-icon" style="color:#065f46">✓</span><span class="sc-name">Attestation CNSS uploadée (valide)</span><div class="sc-bar"><div class="sc-fill" style="width:100%;background:var(--green)"></div></div><span class="sc-score" style="color:#065f46">15/15</span></div>
+        <div class="score-comp"><span class="sc-icon" style="color:#92400e">~</span><span class="sc-name">Dossier CSF actif (1 DRAFT)</span><div class="sc-bar"><div class="sc-fill" style="width:67%;background:var(--amber)"></div></div><span class="sc-score" style="color:#92400e">10/15</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div class="alert alert-warning"><span>⚠️</span><span>Action requise : finalisez votre dossier Excel Avancé (en DRAFT) pour atteindre 100% et débloquer les 5 points restants.</span></div>
+      <div class="card"><div class="card-title" style="margin-bottom:0.75rem;font-size:0.82rem">Historique du score</div>
+        <div class="bar-chart">
+          <div class="bar-chart-bar" style="height:45%;background:#e9e8e2" title="Jan: 45%"></div>
+          <div class="bar-chart-bar" style="height:58%;background:#e9e8e2" title="Fév: 58%"></div>
+          <div class="bar-chart-bar" style="height:65%;background:#e9e8e2" title="Mar: 65%"></div>
+          <div class="bar-chart-bar" style="height:72%;background:rgba(0,230,118,0.4)" title="Avr: 72%"></div>
+          <div class="bar-chart-bar" style="height:80%;background:rgba(0,230,118,0.6)" title="Mai: 80%"></div>
+          <div class="bar-chart-bar" style="height:85%;background:rgba(0,230,118,0.8)" title="Jun: 85%"></div>
+          <div class="bar-chart-bar" style="height:95%;background:var(--green)" title="Avr 2026: 95%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--slate);margin-top:0.3rem"><span>Jan</span><span>Fév</span><span>Mar</span><span>Avr</span><span>Mai</span><span>Jun</span><span>Auj.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EMPLOYEE: MY LEARNING ===== -->
+<div class="page" id="page-employee-mylearning">
+  <div class="topbar"><div><div class="page-title">Mes Formations</div><div class="page-sub">Zackaria Bessado · Technicien Maintenance · SONATROF</div></div></div>
+  <div class="metric-grid">
+    <div class="metric-card"><div class="metric-label">En cours</div><div class="metric-value">1</div><div class="metric-delta">Sécurité HSE</div></div>
+    <div class="metric-card"><div class="metric-label">Complétées</div><div class="metric-value">2</div><div class="metric-delta delta-up">+1 ce trimestre</div></div>
+    <div class="metric-card"><div class="metric-label">Score moyen</div><div class="metric-value">82%</div><div class="metric-delta delta-up">↑ vs 74% avant</div></div>
+    <div class="metric-card"><div class="metric-label">Certificats</div><div class="metric-value">2</div><div class="metric-delta">Excellence Client · HSE</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Sécurité Industrielle & HSE</div><span class="badge badge-blue">En cours</span></div>
+    <div style="margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem"><span style="font-size:0.8rem;color:var(--slate)">Progression globale</span><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem">64%</span></div>
+      <div class="pbar" style="height:8px"><div class="pbar-fill" style="width:64%;background:var(--green)"></div></div>
+    </div>
+    <div>
+      <div class="mod-row"><div class="mod-num" style="background:var(--green-pale);color:#065f46">1</div><div class="mod-info"><div class="mod-title">Réglementation HSE au Maroc</div><div class="mod-meta">6h · Quiz: 88% ✓</div></div><div class="mod-status"><span class="badge badge-green">Terminé</span></div></div>
+      <div class="mod-row"><div class="mod-num" style="background:var(--green-pale);color:#065f46">2</div><div class="mod-info"><div class="mod-title">Identification des Risques</div><div class="mod-meta">8h · Quiz: 75% ✓</div></div><div class="mod-status"><span class="badge badge-green">Terminé</span></div></div>
+      <div class="mod-row"><div class="mod-num" style="background:var(--blue-pale);color:#1e40af">3</div><div class="mod-info"><div class="mod-title">Gestion des Incidents</div><div class="mod-meta">7h · En cours · 40% lu</div></div><div class="mod-status"><span class="badge badge-blue">En cours</span></div></div>
+      <div class="mod-row"><div class="mod-num" style="background:#f4f3ef;color:var(--slate)">4</div><div class="mod-info"><div class="mod-title">Audit HSE et Documentation</div><div class="mod-meta">7h · Non commencé</div></div><div class="mod-status"><span class="badge badge-gray">Bloqué</span></div></div>
+    </div>
+    <div style="margin-top:1rem"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="showPage('employee','course')">Continuer le module 3 →</button></div>
+  </div>
+</div>
+
+<!-- ===== EMPLOYEE: COURSE ===== -->
+<div class="page" id="page-employee-course">
+  <div class="topbar"><div><div class="page-title">Module 3 — Gestion des Incidents</div><div class="page-sub">Sécurité Industrielle HSE · 7h · Simulation</div></div><span class="badge badge-blue">40% complété</span></div>
+  <div class="grid-2">
+    <div class="card" style="min-height:300px">
+      <div style="background:#f4f3ef;border-radius:8px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;border:1px solid var(--border)">
+        <div style="text-align:center;color:var(--slate)"><div style="font-size:2rem;margin-bottom:0.5rem">▶️</div><div style="font-size:0.85rem;font-weight:500">Vidéo: Simulation incident usine</div><div style="font-size:0.72rem">Durée: 45 min</div></div>
+      </div>
+      <div style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.5rem">Gestion des situations d'urgence industrielle</div>
+      <p style="font-size:0.78rem;color:var(--slate);line-height:1.7">Ce module couvre les protocoles d'intervention en cas d'incident HSE selon le Code du Travail marocain. Vous apprendrez à détecter, signaler, et gérer les accidents du travail, ainsi qu'à rédiger les rapports d'incident conformes aux exigences légales.</p>
+      <div style="margin-top:1rem;display:flex;gap:0.5rem">
+        <button class="btn btn-primary" style="flex:1;justify-content:center">Continuer →</button>
+        <button class="btn btn-ghost" onclick="showPage('employee','aitutor')">🤖 Demander au tuteur IA</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Tuteur IA — Zackaria</div><span class="badge badge-green">En ligne</span></div>
+      <div class="chat-wrap" style="max-height:200px" id="emp-chat-preview">
+        <div class="chat-msg ai">
+          <div class="chat-avatar" style="background:rgba(0,230,118,0.15);color:var(--green);font-size:0.55rem">AI</div>
+          <div class="chat-bubble" style="font-size:0.75rem">Salam Zackaria ! Tu es au module 3 sur la gestion des incidents. Ton score au module 2 était 75% — très bien ! 💪<br><br>Est-ce que tu as une question sur les protocoles d'urgence ?</div>
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" style="font-size:0.75rem" placeholder="Pose une question sur le cours…" onkeydown="if(event.key==='Enter')showPage('employee','aitutor')">
+        <button class="btn btn-primary" style="font-size:0.75rem" onclick="showPage('employee','aitutor')">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EMPLOYEE: AI TUTOR ===== -->
+<div class="page" id="page-employee-aitutor">
+  <div class="topbar"><div><div class="page-title">Tuteur IA UPSKILLS</div><div class="page-sub">Assistant pédagogique · Français / العربية / Darija</div></div><span class="badge badge-green">Disponible</span></div>
+  <div class="card" style="flex:1">
+    <div class="chat-wrap" id="emp-chat">
+      <div class="chat-msg ai">
+        <div class="chat-avatar" style="background:rgba(0,230,118,0.15);color:var(--green);font-size:0.55rem">AI</div>
+        <div class="chat-bubble">Salam Zackaria ! Aujourd'hui tu travailles sur la <strong>Gestion des Incidents HSE</strong>.<br><br>Ton score au module 2 était 75%. Je t'ai préparé un focus sur les points que tu as ratés. Veux-tu commencer par :<br>1. Réviser la définition d'un "presque-accident" (near-miss)<br>2. Pratiquer la rédaction d'un rapport d'incident<br>3. Quiz rapide de 5 questions</div>
+      </div>
+      <div class="chat-msg user">
+        <div class="chat-avatar" style="background:rgba(13,31,60,0.1);color:var(--navy)">KB</div>
+        <div class="chat-bubble">C'est quoi la différence entre un incident et un accident du travail selon la loi marocaine ?</div>
+      </div>
+      <div class="chat-msg ai">
+        <div class="chat-avatar" style="background:rgba(0,230,118,0.15);color:var(--green);font-size:0.55rem">AI</div>
+        <div class="chat-bubble">Bonne question ! Selon le <strong>Code du Travail marocain (Dahir 2003)</strong> :<br><br><strong>Incident :</strong> événement indésirable sans blessure grave — exemple : chute d'outil sans blessé.<br><strong>Accident du travail :</strong> événement soudain causant une lésion corporelle pendant le travail — déclaration CNSS obligatoire dans les 48h.<br><br>🧠 Exemple concret à Tanger : dans une usine automobile, une fuite d'huile sur le sol = <em>incident</em>. Si un technicien glisse et se blesse = <em>accident du travail</em>, déclaration CNSS obligatoire.<br><br>Veux-tu que je génère une question de pratique sur ce sujet ?</div>
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="emp-chat-input" placeholder="Pose ta question en français, arabe ou darija…" onkeydown="if(event.key==='Enter')sendEmpChat()">
+      <button class="btn btn-primary" onclick="sendEmpChat()">Envoyer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EMPLOYEE: CERTIFICATES ===== -->
+<div class="page" id="page-employee-certificates">
+  <div class="topbar"><div><div class="page-title">Mes Certificats</div><div class="page-sub">Zackaria Bessado · 2 certificats obtenus</div></div></div>
+  <div class="grid-2">
+    <div class="card" style="text-align:center;padding:2rem">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem">🏆</div>
+      <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.35rem">Excellence Client & Service</div>
+      <div style="font-size:0.78rem;color:var(--slate);margin-bottom:1rem">Obtenu le 15 mars 2025 · Score: 84%</div>
+      <span class="badge badge-green" style="display:inline-block;margin-bottom:1rem">Certifié UPSKILLS ✓</span>
+      <div><button class="btn btn-ghost" style="font-size:0.78rem">📄 Télécharger PDF</button></div>
+    </div>
+    <div class="card" style="text-align:center;padding:2rem;border:2px dashed var(--border);background:#fafaf8">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;opacity:0.3">🔒</div>
+      <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.35rem;color:var(--slate)">Sécurité Industrielle HSE</div>
+      <div style="font-size:0.78rem;color:var(--slate);margin-bottom:0.75rem">En cours · 64% · Module 3/4</div>
+      <div class="pbar" style="margin-bottom:1rem"><div class="pbar-fill" style="width:64%;background:var(--green)"></div></div>
+      <div style="font-size:0.75rem;color:var(--slate)">Complétez le module 4 pour obtenir votre certificat</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROVIDER: OVERVIEW ===== -->
+<div class="page" id="page-provider-provoverview">
+  <div class="topbar"><div><div class="page-title">Tableau de bord Formateur</div><div class="page-sub">ACTIF Formation Centre · Agrément OFPPT-2022-1456</div></div><button class="btn btn-primary" onclick="showPage('provider','builder')">✨ Créer un cours IA</button></div>
+  <div class="metric-grid">
+    <div class="metric-card"><div class="metric-label">Cours publiés</div><div class="metric-value">8</div><div class="metric-delta"><span class="badge badge-green">6 CSF-éligibles</span></div></div>
+    <div class="metric-card"><div class="metric-label">Apprenants actifs</div><div class="metric-value">234</div><div class="metric-delta delta-up">↑ +35% vs sem. passée</div></div>
+    <div class="metric-card"><div class="metric-label">Revenus marketplace</div><div class="metric-value">42 800</div><div class="metric-delta delta-neutral">MAD · avril 2026</div></div>
+    <div class="metric-card"><div class="metric-label">Note moyenne</div><div class="metric-value">4.8⭐</div><div class="metric-delta delta-up">↑ vs 4.5 avant CSF badge</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Performance par cours</div></div>
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr><th style="text-align:left;font-size:0.7rem;color:var(--slate);padding:0.35rem 0;border-bottom:1px solid var(--border)">Cours</th><th style="font-size:0.7rem;color:var(--slate);text-align:right;padding:0.35rem 0;border-bottom:1px solid var(--border)">Inscrits</th><th style="font-size:0.7rem;color:var(--slate);text-align:right;padding:0.35rem 0;border-bottom:1px solid var(--border)">Revenus</th><th style="font-size:0.7rem;color:var(--slate);text-align:right;padding:0.35rem 0;border-bottom:1px solid var(--border)">CSF</th></tr></thead>
+        <tbody>
+          <tr><td style="font-size:0.78rem;padding:0.4rem 0;border-bottom:1px solid rgba(13,31,60,0.05)">IA pour le Business</td><td style="text-align:right;font-size:0.78rem;padding:0.4rem 0;border-bottom:1px solid rgba(13,31,60,0.05)">412</td><td style="text-align:right;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;padding:0.4rem 0;border-bottom:1px solid rgba(13,31,60,0.05)">22 660</td><td style="text-align:right;padding:0.4rem 0;border-bottom:1px solid rgba(13,31,60,0.05)"><span class="badge badge-green" style="font-size:0.62rem">✓</span></td></tr>
+          <tr><td style="font-size:0.78rem;padding:0.4rem 0;border-bottom:1px solid rgba(13,31,60,0.05)">Excellence Client</td><td style="text-align:right;font-size:0.78rem;padding:0.4rem 0;border-bottom:1px solid rgba(13,31,60,0.05)">789</td><td style="text-align:right;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;padding:0.4rem 0;border-bottom:1px solid rgba(13,31,60,0.05)">22 884</td><td style="text-align:right;padding:0.4rem 0;border-bottom:1px solid rgba(13,31,60,0.05)"><span class="badge badge-green" style="font-size:0.62rem">✓</span></td></tr>
+          <tr><td style="font-size:0.78rem;padding:0.4rem 0">Sécurité HSE</td><td style="text-align:right;font-size:0.78rem;padding:0.4rem 0">567</td><td style="text-align:right;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;padding:0.4rem 0">23 814</td><td style="text-align:right;padding:0.4rem 0"><span class="badge badge-green" style="font-size:0.62rem">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Commission marketplace</div></div>
+      <div class="prov-stat"><span class="prov-st-label">Ventes brutes avril</span><span class="prov-st-val">356 400 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label">Commission UPSKILLS (12%)</span><span class="prov-st-val" style="color:var(--red)">- 42 768 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label">Net à percevoir</span><span class="prov-st-val" style="color:var(--green)">313 632 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label">Taux de complétion moyen</span><span class="prov-st-val">78%</span></div>
+      <div class="prov-stat"><span class="prov-st-label">Note moyenne apprenants</span><span class="prov-st-val">4.8 / 5</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROVIDER: BUILDER ===== -->
+<div class="page" id="page-provider-builder">
+  <div class="topbar"><div><div class="page-title">AI Course Builder</div><div class="page-sub">Créez un cours CSF-éligible en quelques minutes</div></div></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:1rem">Paramètres du cours</div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem">
+        <div><label style="font-size:0.72rem;color:var(--slate);display:block;margin-bottom:0.3rem">Sujet de la formation</label><input type="text" value="Lean Manufacturing & Kaizen" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.82rem;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy)"></div>
+        <div><label style="font-size:0.72rem;color:var(--slate);display:block;margin-bottom:0.3rem">Public cible</label><input type="text" value="Techniciens et chefs d'atelier, industrie automobile" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.82rem;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy)"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+          <div><label style="font-size:0.72rem;color:var(--slate);display:block;margin-bottom:0.3rem">Durée totale</label><input type="text" value="21 heures (3 jours)" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.82rem;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy)"></div>
+          <div><label style="font-size:0.72rem;color:var(--slate);display:block;margin-bottom:0.3rem">Format</label><select style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.82rem;font-family:'DM Sans',sans-serif;background:var(--white)"><option>Présentiel</option><option>E-learning</option><option>Blended</option></select></div>
+        </div>
+        <button class="btn btn-primary" style="justify-content:center;padding:0.65rem">✨ Générer le programme CSF →</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+        <div class="card-title">Programme généré par IA</div>
+        <span class="badge badge-green">CSF-Éligible ✓</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.6rem">
+        <div style="padding:0.65rem;background:#f4f3ef;border-radius:6px;border-left:3px solid var(--green)">
+          <div style="font-size:0.72rem;color:var(--slate);margin-bottom:0.2rem">Module 1 · 5h</div>
+          <div style="font-size:0.8rem;font-weight:600">Introduction au Lean Manufacturing</div>
+          <div style="font-size:0.72rem;color:var(--slate)">5 zéros, gaspillages (MUDA), carte de flux de valeur</div>
+        </div>
+        <div style="padding:0.65rem;background:#f4f3ef;border-radius:6px;border-left:3px solid #3b82f6">
+          <div style="font-size:0.72rem;color:var(--slate);margin-bottom:0.2rem">Module 2 · 6h</div>
+          <div style="font-size:0.8rem;font-weight:600">Méthode Kaizen & 5S</div>
+          <div style="font-size:0.72rem;color:var(--slate)">Chantiers Kaizen, 5S pratique, indicateurs OEE</div>
+        </div>
+        <div style="padding:0.65rem;background:#f4f3ef;border-radius:6px;border-left:3px solid #8b5cf6">
+          <div style="font-size:0.72rem;color:var(--slate);margin-bottom:0.2rem">Module 3 · 5h</div>
+          <div style="font-size:0.8rem;font-weight:600">Contrôle qualité & Poka-Yoke</div>
+          <div style="font-size:0.72rem;color:var(--slate)">Zéro défaut, détrompeurs, SMED</div>
+        </div>
+        <div style="padding:0.65rem;background:#f4f3ef;border-radius:6px;border-left:3px solid var(--amber)">
+          <div style="font-size:0.72rem;color:var(--slate);margin-bottom:0.2rem">Module 4 · 5h</div>
+          <div style="font-size:0.8rem;font-weight:600">Projet d'amélioration terrain</div>
+          <div style="font-size:0.72rem;color:var(--slate)">Simulation atelier, rapport d'amélioration, présentation</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:0.75rem">📤 Publier sur le marketplace</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COOP: OVERVIEW ===== -->
+<div class="page" id="page-coop-coopoverview">
+  <div class="topbar"><div><div class="page-title">Coopérative Al Baraka</div><div class="page-sub">Meknès · 45 membres · Sponsor: OCP Foundation</div></div></div>
+  <div class="alert alert-info"><span>ℹ️</span><span>Votre accès LMS est <strong>100% gratuit</strong>, sponsorisé par OCP Foundation. Budget formation disponible: <strong>45 000 MAD</strong> (1 000 MAD/membre).</span></div>
+  <div class="metric-grid">
+    <div class="metric-card"><div class="metric-label">Membres actifs</div><div class="metric-value">45</div><div class="metric-delta"><span class="badge badge-amber">Coopérative</span></div></div>
+    <div class="metric-card"><div class="metric-label">En formation</div><div class="metric-value">38</div><div class="metric-delta delta-up">84% du groupe</div></div>
+    <div class="metric-card"><div class="metric-label">Certifiés</div><div class="metric-value">12</div><div class="metric-delta delta-up">↑ +8 ce mois</div></div>
+    <div class="metric-card"><div class="metric-label">Budget utilisé</div><div class="metric-value">0 MAD</div><div class="metric-delta" style="color:#065f46">OCP couvre 100%</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Formation active — Techniques Agricoles</div><span class="badge badge-amber">Sponsorisé OCP</span></div>
+      <div style="margin-bottom:0.75rem">
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.35rem"><span style="font-size:0.78rem">Progression du groupe</span><span style="font-weight:600">38 / 45 membres</span></div>
+        <div class="pbar" style="height:10px"><div class="pbar-fill" style="width:84%;background:var(--amber)"></div></div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--slate);line-height:1.7;margin-bottom:0.75rem">Techniques Agricoles Modernes · 35h · Présentiel + terrain · Arabe + Darija<br>Formateur: Meknès Agri Centre · Note: 4.9⭐</div>
+      <div class="prov-stat"><span class="prov-st-label" style="font-size:0.75rem">Certification obtenue</span><span style="font-size:0.82rem;font-weight:600">12 / 45</span></div>
+      <div class="prov-stat"><span class="prov-st-label" style="font-size:0.75rem">Score quiz moyen</span><span style="font-size:0.82rem;font-weight:600">79%</span></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Rapport d'impact OCP Foundation</div></div>
+      <div style="font-size:0.78rem;color:var(--slate);margin-bottom:1rem;line-height:1.6">Ce rapport est automatiquement généré pour votre sponsor à la fin de chaque mois.</div>
+      <div class="prov-stat"><span class="prov-st-label" style="font-size:0.75rem">Budget investi par OCP</span><span style="font-size:0.82rem;font-weight:600;color:#065f46">38 000 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label" style="font-size:0.75rem">Bénéficiaires formés</span><span style="font-size:0.82rem;font-weight:600">38 agriculteurs</span></div>
+      <div class="prov-stat"><span class="prov-st-label" style="font-size:0.75rem">Certificats émis</span><span style="font-size:0.82rem;font-weight:600">12 certifiés</span></div>
+      <div class="prov-stat"><span class="prov-st-label" style="font-size:0.75rem">Coût par bénéficiaire</span><span style="font-size:0.82rem;font-weight:600">1 000 MAD</span></div>
+      <button class="btn btn-ghost" style="margin-top:0.75rem;font-size:0.78rem">📊 Télécharger rapport ESG</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN: OVERVIEW ===== -->
+<div class="page" id="page-admin-adminoverview">
+  <div class="topbar"><div><div class="page-title">KPIs Plateforme UPSKILLS</div><div class="page-sub">Tableau de bord super-admin · Avril 2026</div></div></div>
+  <div class="metric-grid">
+    <div class="metric-card"><div class="metric-label">MRR</div><div class="metric-value" style="color:var(--green)">142 800</div><div class="metric-delta delta-up">MAD · ↑ +12% vs M-1</div></div>
+    <div class="metric-card"><div class="metric-label">Entreprises actives</div><div class="metric-value">157</div><div class="metric-delta delta-up">↑ +23 ce mois</div></div>
+    <div class="metric-card"><div class="metric-label">Dossiers CSF générés</div><div class="metric-value">312</div><div class="metric-delta delta-up">↑ +41% · mois 6</div></div>
+    <div class="metric-card"><div class="metric-label">Taux approbation CSF</div><div class="metric-value" style="color:var(--green)">94%</div><div class="metric-delta">vs 67% marché (OFPPT)</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Revenus par stream</div></div>
+      <div class="prov-stat"><span class="prov-st-label">PME Starter (120 × 990)</span><span class="prov-st-val">118 800 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label">Enterprise (22 × 2 490)</span><span class="prov-st-val">54 780 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label">Marketplace (12% × 336K GMV)</span><span class="prov-st-val">40 320 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label">CSR Sponsoring (10%)</span><span class="prov-st-val">12 000 MAD</span></div>
+      <div style="border-top:2px solid var(--border);margin-top:0.5rem;padding-top:0.5rem" class="prov-stat"><span class="prov-st-label" style="font-weight:700">Total MRR</span><span class="prov-st-val" style="color:var(--green)">225 900 MAD</span></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Indicateurs produit clés</div></div>
+      <div class="prov-stat"><span class="prov-st-label">Churn mensuel</span><span class="prov-st-val" style="color:#065f46">2.1% ✓</span></div>
+      <div class="prov-stat"><span class="prov-st-label">LTV moyen</span><span class="prov-st-val">28 400 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label">CAC</span><span class="prov-st-val">1 240 MAD</span></div>
+      <div class="prov-stat"><span class="prov-st-label">LTV:CAC ratio</span><span class="prov-st-val" style="color:var(--green)">22.9x ✓</span></div>
+      <div class="prov-stat"><span class="prov-st-label">Temps génération dossier moy.</span><span class="prov-st-val">6.2 min ✓</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN: COMPANIES ===== -->
+<div class="page" id="page-admin-companies">
+  <div class="topbar"><div><div class="page-title">Gestion des Entreprises</div><div class="page-sub">4 comptes de démo · Données mock UPSKILLS</div></div></div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Entreprise</th><th>Ville</th><th>Plan</th><th>Employés</th><th>CFF</th><th>Score CSF</th><th>Statut</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div style="font-weight:600">SONATROF Industries</div><div style="font-size:0.68rem;color:var(--slate)">Industrie Auto · Nisrine El Fassi</div></td>
+            <td>Tanger</td>
+            <td><span class="badge badge-navy">Enterprise</span></td>
+            <td>148</td>
+            <td style="font-family:'Syne',sans-serif;font-weight:700">24 800 MAD</td>
+            <td><span class="badge badge-green">95% ✓</span></td>
+            <td><span class="badge badge-green">Actif</span></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600">TechStart Maroc</div><div style="font-size:0.68rem;color:var(--slate)">Tech & Digital · Youssef Benjelloun</div></td>
+            <td>Rabat</td>
+            <td><span class="badge badge-blue">Starter</span></td>
+            <td>23</td>
+            <td style="font-family:'Syne',sans-serif;font-weight:700">7 200 MAD</td>
+            <td><span class="badge badge-amber">58% ~</span></td>
+            <td><span class="badge badge-green">Actif</span></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600">COFIMA Distribution</div><div style="font-size:0.68rem;color:var(--slate)">Commerce · Samira Ouahbi</div></td>
+            <td>Casablanca</td>
+            <td><span class="badge badge-navy">Enterprise</span></td>
+            <td>312</td>
+            <td style="font-family:'Syne',sans-serif;font-weight:700">57 800 MAD</td>
+            <td><span class="badge badge-green">88% ✓</span></td>
+            <td><span class="badge badge-green">Actif</span></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:600">Coopérative Al Baraka</div><div style="font-size:0.68rem;color:var(--slate)">Agriculture · Mohammed Said Rahmani</div></td>
+            <td>Meknès</td>
+            <td><span class="badge badge-amber">Gratuit CSR</span></td>
+            <td>45</td>
+            <td style="font-family:'Syne',sans-serif;font-weight:700;color:var(--slate)">0 MAD</td>
+            <td><span class="badge badge-gray">N/A</span></td>
+            <td><span class="badge badge-green">Actif</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN: REJECTION ANALYZER ===== -->
+<div class="page" id="page-admin-rejection">
+  <div class="topbar"><div><div class="page-title">AI Rejection Analyzer</div><div class="page-sub">Analyse automatique des dossiers rejetés · OFPPT</div></div></div>
+  <div class="alert alert-warning"><span>⚠️</span><span>1 dossier rejeté détecté — <strong>TechStart Maroc · CSF-DOC-003</strong>. L'IA a identifié 2 causes et propose une correction automatique.</span></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Dossier rejeté — CSF-DOC-003</div><span class="badge badge-red">Rejeté</span></div>
+      <div style="font-size:0.78rem;color:var(--slate);margin-bottom:1rem">TechStart Maroc · IA pour le Business · 23 400 MAD · Délégation Rabat</div>
+      <div class="checklist">
+        <div class="cl-item"><div class="cl-icon cl-x">✕</div><div><div class="cl-text">REJ-01 — Programme non-conforme format OFPPT</div><div class="cl-sub">Objectifs pédagogiques manquants sur modules 2 et 3 · Auto-corrigeable ✓</div></div></div>
+        <div class="cl-item"><div class="cl-icon cl-x">✕</div><div><div class="cl-text">REJ-03 — Absence d'upload portail OFPPT Rabat</div><div class="cl-sub">Rabat exige double soumission (physique + portail) — non effectuée</div></div></div>
+        <div class="cl-item"><div class="cl-icon cl-check">✓</div><div><div class="cl-text">Budget prévisionnel conforme</div><div class="cl-sub">Coûts OFPPT-approuvés · Total correct</div></div></div>
+        <div class="cl-item"><div class="cl-icon cl-check">✓</div><div><div class="cl-text">Bénéficiaires CNSS valides</div><div class="cl-sub">23 employés · CIN vérifiés</div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Plan de correction IA</div></div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem">
+        <div style="padding:0.75rem;background:var(--amber-pale);border-radius:8px;border-left:3px solid var(--amber)">
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:0.3rem">Action 1 — Corriger programme (Auto)</div>
+          <div style="font-size:0.73rem;color:var(--slate)">L'IA régénère les objectifs pédagogiques manquants pour les modules 2 et 3 au format OFPPT standard. Durée estimée: 2 minutes.</div>
+          <button class="btn btn-primary" style="margin-top:0.6rem;font-size:0.72rem;padding:0.3rem 0.75rem">Corriger automatiquement →</button>
+        </div>
+        <div style="padding:0.75rem;background:var(--blue-pale);border-radius:8px;border-left:3px solid #3b82f6">
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:0.3rem">Action 2 — Upload portail Rabat (Manuel)</div>
+          <div style="font-size:0.73rem;color:var(--slate)">Accédez au portail OFPPT Rabat et uploadez le dossier corrigé. Guide étape par étape disponible.</div>
+          <button class="btn btn-ghost" style="margin-top:0.6rem;font-size:0.72rem;padding:0.3rem 0.75rem">Voir le guide →</button>
+        </div>
+        <div style="padding:0.75rem;background:var(--green-pale);border-radius:8px;border-left:3px solid var(--green)">
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:0.3rem">Délai estimé de resoumission: 24–48h</div>
+          <div style="font-size:0.73rem;color:#065f46">Taux de succès après correction IA: <strong>88%</strong> vs 55% sans UPSKILLS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end app -->
+
+<script>
+let currentRole = 'hr';
+let currentPages = { hr: 'overview', employee: 'mylearning', provider: 'provoverview', coop: 'coopoverview', admin: 'adminoverview' };
+
+function switchRole(role) {
+  // hide all sidebars
+  document.querySelectorAll('[id^="sidebar-"]').forEach(s => s.style.display = 'none');
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sidebar-' + role).style.display = 'flex';
+  document.getElementById('tab-' + role).classList.add('active');
+  currentRole = role;
+  showPage(role, currentPages[role]);
+}
+
+function showPage(role, pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById('page-' + role + '-' + pageId);
+  if (page) { page.classList.add('active'); currentPages[role] = pageId; }
+  // update sidebar active
+  document.querySelectorAll('#sidebar-' + role + ' .nav-item').forEach(item => {
+    item.classList.remove('active');
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes("'" + pageId + "'")) {
+      item.classList.add('active');
+    }
+  });
+}
+
+function switchTab(btn, group) {
+  btn.closest('.tab-row').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function sendHrChat() {
+  const input = document.getElementById('hr-chat-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const chat = document.getElementById('hr-chat');
+  const userMsg = `<div class="chat-msg user"><div class="chat-avatar" style="background:rgba(13,31,60,0.1);color:var(--navy)">NE</div><div class="chat-bubble">${val}</div></div>`;
+  chat.insertAdjacentHTML('beforeend', userMsg);
+  input.value = '';
+  setTimeout(() => {
+    const reply = `<div class="chat-msg ai"><div class="chat-avatar" style="background:rgba(0,230,118,0.15);color:var(--green)">AI</div><div class="chat-bubble">Je traite votre demande CSF... Pour toute question sur votre dossier ou vos formations, je suis disponible en français et en arabe. Voulez-vous que je génère une recommandation basée sur votre profil SONATROF ?</div></div>`;
+    chat.insertAdjacentHTML('beforeend', reply);
+    chat.scrollTop = chat.scrollHeight;
+  }, 600);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function sendEmpChat() {
+  const input = document.getElementById('emp-chat-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const chat = document.getElementById('emp-chat');
+  const userMsg = `<div class="chat-msg user"><div class="chat-avatar" style="background:rgba(13,31,60,0.1);color:var(--navy)">KB</div><div class="chat-bubble">${val}</div></div>`;
+  chat.insertAdjacentHTML('beforeend', userMsg);
+  input.value = '';
+  setTimeout(() => {
+    const reply = `<div class="chat-msg ai"><div class="chat-avatar" style="background:rgba(0,230,118,0.15);color:var(--green);font-size:0.55rem">AI</div><div class="chat-bubble">Bonne question Zackaria ! En lien avec ton module HSE actuel, voici une réponse adaptée à ton niveau et à ton contexte dans l'industrie automobile à Tanger. Veux-tu que je génère une question pratique sur ce sujet ?</div></div>`;
+    chat.insertAdjacentHTML('beforeend', reply);
+    chat.scrollTop = chat.scrollHeight;
+  }, 600);
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+</body>
+</html>
